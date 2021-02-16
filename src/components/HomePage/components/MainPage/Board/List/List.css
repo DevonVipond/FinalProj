@@ -1,0 +1,23 @@
+.container {
+    border-radius: 25px;
+    border: 3px solid #fafafc;
+    padding: 20px;
+    background-color: white;
+    margin: 9px;
+    display: flex;
+    width: 440px;
+    flex-direction: column;
+    align-items: center;
+}
+
+#createAppButton {
+    width: 98%;
+    margin-bottom: 7px;
+    background-color: white;
+    border: 2px solid whitesmoke;
+}
+
+#createAppButton:hover {
+    background-color: lightgrey;
+}
+

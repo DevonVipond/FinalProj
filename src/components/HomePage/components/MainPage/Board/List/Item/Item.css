@@ -1,0 +1,30 @@
+.itemLabel {
+    text-align: left;
+    margin-left: 7px;
+    font-size: 34px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.itemContainer {
+    border-radius: 25px;
+    border: 4px solid #fafafc;
+    padding: 20px;
+    background-color: #ffffff;
+    margin: 9px;
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+}
+
+#companyLabel {
+    font-weight: 900;
+}
+
+#addButton {
+    border-radius: 25px;
+    border: 2px solid #fafafc;
+    background-color: white;
+    margin-top: 14px;
+}

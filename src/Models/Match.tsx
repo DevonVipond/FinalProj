@@ -1,9 +1,6 @@
 import {User, UserProps} from "./Interfaces/User";
 
-export class Friend extends User {
-    public static create({username, distance, activities}: UserProps) {
-        return new Friend({username, distance, activities})
-    }
+export class Match extends User {
 
     constructor({username, distance, activities}: UserProps) {
         super({username, distance, activities})

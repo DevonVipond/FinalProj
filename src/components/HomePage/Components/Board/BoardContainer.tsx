@@ -1,7 +1,7 @@
 import Board from "./Board"
 import './Board.css'
-import {Activity} from "../../../../DataTransferObjects/Activity";
-import {Match} from "../../../../DataTransferObjects/Match";
+import {Activity} from "../../../../Models/Activity";
+import {Match} from "../../../../Models/Match";
 
 const activitiesA = [
     new Activity({name: Activity.ActivityNames.SOCCER, skillLevel: 'beginner'}),

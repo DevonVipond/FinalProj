@@ -62,7 +62,7 @@ const UIForm = (name: string, inputs: Array<string> ) => {
 const Login = () => {
     return (
         <div >
-            { UIForm('Login', ['username', 'password']) }
+            { UIForm('User Login', ['username', 'password']) }
         </div>
     )
 }

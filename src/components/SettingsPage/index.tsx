@@ -1,9 +1,9 @@
 import SettingsPage from './SettingsPage'
-import {AuthenticatedUser} from "../../DataTransferObjects/Interfaces/AuthenticatedUser";
-import {Activity} from "../../DataTransferObjects/Activity";
+import {AuthenticatedUser} from "../../Models/Interfaces/AuthenticatedUser";
+import {Activity} from "../../Models/Activity";
 import PageWrapper from "../Shared/PageWrapper/PageWrapper";
 import React from "react";
-import {PremiumUser} from "../../DataTransferObjects/PremiumUser";
+import {PremiumUser} from "../../Models/PremiumUser";
 
 const activities = [
     new Activity({name: 'skiing', skillLevel: Activity.SkillLevel.ADVANCED}),

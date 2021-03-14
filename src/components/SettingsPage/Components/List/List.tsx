@@ -2,14 +2,17 @@ import React from "react";
 import './List.css'
 import './Components/Item/index'
 import { Checkbox } from "semantic-ui-react";
-import {Activity} from "../../../../DataTransferObjects/Activity";
+                    //defaultChecked ? (<Checkbox onClick={} defaultChecked label={activityName} />) : (<Checkbox label={activityName} />)
 
 const ActivityItem = (activityName: string, defaultChecked: boolean = false) => {
+    const activityClicked = () => {
+        console.log('activity clicked')
+    }
     return (
         <li>
             <div>
                 {
-                    defaultChecked ? (<Checkbox onClick={} defaultChecked label={activityName} />) : (<Checkbox label={activityName} />)
+                    defaultChecked ? (<Checkbox onClick={activityClicked} defaultChecked label={activityName} />) : (<Checkbox label={activityName} />)
                 }
 
             </div>

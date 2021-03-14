@@ -1,10 +1,10 @@
 import React, {useEffect} from "react";
 import List from './Components/LIst/ListContainer'
-import {Activity} from "../../../../DataTransferObjects/Activity";
-import {Match} from "../../../../DataTransferObjects/Match";
-import {User} from "../../../../DataTransferObjects/Interfaces/User";
+import {Activity} from "../../../../Models/Activity";
+import {Match} from "../../../../Models/Match";
+import {User} from "../../../../Models/Interfaces/User";
 import Item from "./Components/LIst/Components/Item/ItemContainer";
-import {Friend} from "../../../../DataTransferObjects/Friend";
+import {Friend} from "../../../../Models/Friend";
 
 const createList = (title: string, users: Array<User>) => {
     return (

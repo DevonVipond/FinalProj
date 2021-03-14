@@ -3,6 +3,7 @@ import {Activity} from "./Activity";
 import {AuthenticatedUser} from "./Interfaces/AuthenticatedUser";
 
 export class PremiumUser extends AuthenticatedUser {
+
     constructor({username, distance, activities}: UserProps) {
         super({username, distance, activities});
     }

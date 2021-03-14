@@ -1,7 +1,7 @@
 import React from "react";
 import './ActivityModal.css'
 import { Checkbox } from "semantic-ui-react";
-import { Activity } from "../../../../DataTransferObjects/Activity";
+import { Activity } from "../../../../Models/Activity";
 import CreateModal from "../../../Shared/Modal/Index";
 
 const createCheckBoxes = () => {

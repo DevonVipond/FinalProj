@@ -1,7 +1,7 @@
 import React from "react"
 import './Item.css'
-import { User } from "../../../../../../../../DataTransferObjects/Interfaces/User";
-import { Activity } from "../../../../../../../../DataTransferObjects/Activity";
+import { User } from "../../../../../../../../Models/Interfaces/User";
+import { Activity } from "../../../../../../../../Models/Activity";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBasketballBall, faFootballBall, faFutbol, faSkiing} from "@fortawesome/free-solid-svg-icons";
 import 'semantic-ui-css/semantic.min.css';

@@ -27,11 +27,6 @@ export class Activity {
         ADVANCED: 'advanced',
     }
 
-    public static create({ name, skillLevel }: props) {
-        return new Activity({ name, skillLevel })
-
-    }
-
     private _name: any
     private _skillLevel: string
 
@@ -45,7 +40,7 @@ export class Activity {
     name(): string { return this._name }
     skillLevel(): string { return this._skillLevel }
 
-    toDTO(): props {
+    toJSON(): props {
         return {
             name: this._name,
             skillLevel: this._skillLevel

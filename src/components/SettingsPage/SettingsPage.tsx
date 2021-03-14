@@ -1,8 +1,8 @@
 import './SettingsPage.css'
-import {AuthenticatedUser} from "../../DataTransferObjects/Interfaces/AuthenticatedUser";
+import {AuthenticatedUser} from "../../Models/Interfaces/AuthenticatedUser";
 import List from './Components/List/index'
 import Item from './Components/List/Components/Item/index'
-import {Activity} from "../../DataTransferObjects/Activity";
+import {Activity} from "../../Models/Activity";
 import {Button, Input} from "semantic-ui-react";
 
 type Props = {

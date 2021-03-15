@@ -16,13 +16,15 @@ export abstract class BaseApi {
             const res = await this._api.get(url) 
 
             if (res.status !== 200) {
-                throw Error('BaseApi->get failed with url ' + url)
+                throw Error('BaseApi -> get failed with url ' + url)
             }
 
             return res.data
 
         } catch (e) {
+
             throw e
+
         }
     }
 
@@ -295,6 +297,18 @@ class UserSettingsApi extends BaseApi {
         try {
 
             return await super.get('/activities')
+
+        } catch (e) {
+
+            throw e
+
+        }
+    }
+
+    async fetchDistance(): Promise<string> {
+        try {
+
+            return await super.get('/distance')
 
         } catch (e) {
 

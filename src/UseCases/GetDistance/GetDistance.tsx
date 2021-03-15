@@ -1,9 +1,7 @@
 import { userSettingsApi } from "../../Api/FriendService/FriendService";
-import { Activity } from "../../Models/Activity";
 import { UserState } from "../../Models/UserState"
 
-export async function GetActivies(): Promise<Array<Activity>> {
-
+export async function GetDistance(): Promise<string> {
 
     try {
 
@@ -15,14 +13,14 @@ export async function GetActivies(): Promise<Array<Activity>> {
 
         //return UserState.Instance()._currentUser.activities()
 
-        return await userSettingsApi.fetchActivities()
+        return await userSettingsApi.fetchDistance()
 
 
     } catch (e) {
 
         console.error('E: GetActivities ' + e.toString())
 
-        return UserState.Instance()._currentUser.activities()
+        return UserState.Instance()._currentUser.distance()
         
         throw e
 

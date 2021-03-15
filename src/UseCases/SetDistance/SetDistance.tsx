@@ -1,8 +1,7 @@
 import { userSettingsApi } from "../../Api/FriendService/FriendService";
-import { Activity } from "../../Models/Activity";
 import { UserState } from "../../Models/UserState"
 
-export async function GetActivies(): Promise<Array<Activity>> {
+export async function SetDistance(distance: string): Promise<void> {
 
 
     try {
@@ -15,14 +14,15 @@ export async function GetActivies(): Promise<Array<Activity>> {
 
         //return UserState.Instance()._currentUser.activities()
 
-        return await userSettingsApi.fetchActivities()
+         await userSettingsApi.updateDistance(distance)
 
 
     } catch (e) {
 
-        console.error('E: GetActivities ' + e.toString())
+        console.error('E: SetDistance ' + e.toString())
 
-        return UserState.Instance()._currentUser.activities()
+        UserState.Instance()._currentUser.setDistance(distance)
+        return
         
         throw e
 

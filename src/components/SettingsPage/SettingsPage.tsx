@@ -1,8 +1,8 @@
 import './SettingsPage.css'
-import React from 'react'
 import List from './Components/List/index'
-import {Activity} from "../../Models/Activity";
-import {Button, Input} from "semantic-ui-react";
+import React from 'react'
+import { GetDistance } from '../../UseCases/GetDistance/GetDistance';
+import { SetDistance } from '../../UseCases/SetDistance/SetDistance';
 
 type Props = {
     getActivities: Function,
@@ -11,18 +11,36 @@ type Props = {
 }
 
 const SettingsPage = ({ getActivities, addActivity, removeActivity }: Props) => {
+    const [distance, setD] = React.useState<string>('0')
 
+    const dist = (e: any) => { 
+        //if (e.key === 'Enter' || e.keycode === 13) {
+            const distance: string = e.target.value.toString()
+            SetDistance(distance)
+                .then((e: any) => {
+                    setD(distance)
+                })
+                .catch((e: any) => {
+                    console.log('SettingsPage-> unable to update distance')
+                    console.log(e)
+                })
+       // }
+    }
+
+    React.useEffect(() => {
+        GetDistance().then(d => {
+            setD(d)
+        }).catch(e => {
+            console.log('SettingsPage-> unable to get distance')
+        })
+    }, [])
+
+                //<Input focus min="0" max="50" step="10" onChange={e => dist(e)} placeholder={distance} />
     return (
         <div className='settingsContainer'>
             <List getActivities={getActivities} addActivity={addActivity} removeActivity={removeActivity} />
-            <div className='marginDiv'>
-                <Input focus placeholder='distance' />
-            </div>
-            <div className='marginDiv'>
-                <Button color="blue">Save</Button>
-            </div>
-            <div className='marginDiv'>
-                <Button positive>Upgrade To Premium</Button>
+            <div id='distanceButton' className='marginDiv'>
+                <input type="number" value={distance} onChange={e => dist(e)} min="5" max="50" step="5"/>
             </div>
         </div>
     )

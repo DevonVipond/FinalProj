@@ -14,7 +14,7 @@ const Item = ({ activity }: Props ) => {
         <li id='settingsLi'>
             <div>
                 { activity.name() }
-                <button id='openModalButton' onClick={() => setShowModal(true)}> + </button>
+                <button id='openModalButton' onClick={() => setShowModal(true)}> + </button> 
                 <ActivityModal show={showModal} onHide={() => setShowModal(false)}/>
             </div>
         </li>

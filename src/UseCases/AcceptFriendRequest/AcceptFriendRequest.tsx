@@ -10,7 +10,7 @@ export async function AcceptFriendRequest(request: FriendRequest): Promise<void>
 
     } catch (e) {
 
-        console.error('E: AddActivity ' + e.toString())
+        console.error('E: AcceptFriendRequest ' + e)
 
         throw e
 

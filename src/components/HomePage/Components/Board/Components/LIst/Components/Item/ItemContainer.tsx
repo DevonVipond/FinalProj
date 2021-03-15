@@ -1,3 +1,3 @@
-import { Item } from './Item'
+import { FriendItem } from './Item'
 
-export default Item
+export default FriendItem

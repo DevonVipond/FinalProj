@@ -48,20 +48,6 @@ const activityIcon = (activityName: string, skillLevel: string) => {
     }
 }
 
-//export const Item = ({ user }: { user: User }) => {
-//    return (
-//        <div className='itemContainer' >
-//            <a>
-//                <p className='itemLabel' id='companyLabel'>{user.username()}</p>
-//                <p className='itemLabel' id='positionLabel'>{user.distance()}</p>
-//                <div>
-//                    { user.activities().map( a => ( activityIcon(a.name(), a.skillLevel()) ) ) }
-//                </div>
-//            </a>
-//        </div>
-//    )
-//}
-
 export const FriendItem = ({ user, reloadBoard }: { user: Friend, reloadBoard: Function }) => {
     return (
         <div className='itemContainer' >

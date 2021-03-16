@@ -1,18 +1,26 @@
 import React from "react";
+import { Select } from 'semantic-ui-react'
 import './List.css'
 import './Components/Item/index'
 import { Checkbox } from "semantic-ui-react";
 import { Activity } from "../../../../Models/Activity";
-                    //defaultChecked ? (<Checkbox onClick={} defaultChecked label={activityName} />) : (<Checkbox label={activityName} />)
-
+                    
 const ActivityItem = (clicked: Function, activityName: string, defaultChecked: boolean = false) => {
+
+    const skillLevelOptions = [
+        { key: 1, value: Activity.SkillLevel.BEGINNER, text: 'Beginner' },
+        { key: 2, value: Activity.SkillLevel.INTERMEDIATE, text: 'Intermediate'},
+        { key: 3, value: Activity.SkillLevel.ADVANCED, text: 'Advanced' },
+    ]
+
     return (
-        <li>
+        <li style={{marginBottom: defaultChecked? '70px' : '10px'}}>
             <div>
                 {
                     defaultChecked ? (<Checkbox onClick={(e: any) => clicked(e, activityName)} defaultChecked label={activityName} />) :
                                      (<Checkbox onClick={(e: any) => clicked(e, activityName)} label={activityName} />)
                 }
+                { defaultChecked && <Select placeholder='Skill Level' options={skillLevelOptions} /> }
             </div>
         </li>
     )

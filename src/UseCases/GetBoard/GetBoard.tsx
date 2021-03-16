@@ -13,7 +13,6 @@ export type BoardT = {
 
 export async function GetBoard(): Promise<BoardT> {
 
-
     try {
 
         const friends: Array<Friend> = await FetchFriends()

@@ -1,4 +1,4 @@
-import { userSettingsApi } from "../../Api/FriendService/FriendService";
+import { api } from "../../Api/Api";
 import { Activity } from "../../Models/Activity";
 import { UserState } from "../../Models/UserState"
 
@@ -12,8 +12,7 @@ export async function AddActivity(activity: Activity): Promise<void> {
 
     try {
 
-        await userSettingsApi.addActivity(activity)
-
+        await api.post('/activities', activity.toJSON())
 
     } catch (e) {
 

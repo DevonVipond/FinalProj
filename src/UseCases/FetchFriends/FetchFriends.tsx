@@ -1,3 +1,4 @@
+import { api } from "../../Api/Api";
 import { friendApi } from "../../Api/FriendService/FriendService";
 import { Activity } from "../../Models/Activity";
 import { Friend } from "../../Models/Friend";
@@ -35,7 +36,15 @@ export async function FetchFriends(): Promise<Array<Friend>> {
 
     try {
 
-        return await friendApi.fetchFriends()
+        const payload = await api.get('/friends')
+
+        const friends: Array<Friend> = payload.map((f: any) => {
+
+            return new FriendRequest(f)
+
+        })
+
+        return friends
 
     } catch (e) {
 

@@ -2,6 +2,7 @@
 import { matchesApi } from "../../Api/FriendService/FriendService";
 import { Activity } from "../../Models/Activity";
 import { Match } from "../../Models/Match";
+import { UserState } from "../../Models/UserState";
 
 export async function GetMatches(): Promise<Array<Match>> {
     const activitiesA = [
@@ -43,7 +44,7 @@ export async function GetMatches(): Promise<Array<Match>> {
 
         console.error('E: GetMatches ' + e.toString())
 
-        return fake_matches
+        return UserState.Instance()._matches
 
         throw e
 

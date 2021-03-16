@@ -1,4 +1,4 @@
-import { userSettingsApi } from "../../Api/FriendService/FriendService";
+import { api } from "../../Api/Api";
 import { UserState } from "../../Models/UserState"
 
 export async function SetDistance(distance: string): Promise<void> {
@@ -6,16 +6,7 @@ export async function SetDistance(distance: string): Promise<void> {
 
     try {
 
-        //if (!UserState.Instance()._currentUser) {
-
-        //    UserState.Instance()._currentUser = await userSettingsApi.fetchSettings()
-
-        //}
-
-        //return UserState.Instance()._currentUser.activities()
-
-         await userSettingsApi.updateDistance(distance)
-
+        await api.post('/distance', distance)
 
     } catch (e) {
 

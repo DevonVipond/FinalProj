@@ -16,7 +16,7 @@ const userLogin = async (req, res) => {
 
         const city = convertGPSToCity(longitude, latitude)
 
-        const loginSuccessful = await db.call('VERIFY USER LOGIN CREDENTIALS', username, password)
+        const loginSuccessful = await db.call('VERIFY USER LOGIN CREDENTIALS', [username, password])
         if (!loginSuccessful) {
 
             badRequest(res, "Authentication failed!")
@@ -24,7 +24,7 @@ const userLogin = async (req, res) => {
             
         }
 
-        const success = await db.call('ADD USERS LOCATION', longitude, latitude, city) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        const success = await db.call('ADD USERS LOCATION', [longitude, latitude, city]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
 
         if (!success) {
 
@@ -62,7 +62,7 @@ const adminLogin = async (req, res) => {
 
         const city = convertGPSToCity(longitude, latitude)
 
-        const loginSuccessful = await db.call('VERIFY ADMIN LOGIN CREDENTIALS', username, password) 
+        const loginSuccessful = await db.call('VERIFY ADMIN LOGIN CREDENTIALS', [username, password]) 
         if (!loginSuccessful) {
 
             badRequest(res, "Authentication failed!")
@@ -100,8 +100,10 @@ const register = async (req, res) => {
 
         const city = convertGPSToCity(longitude, latitude)
 
-        await db.call('ADD USERS LOCATION', longitude, latitude, city) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        await db.call('ADD USERS LOCATION', [longitude, latitude, city]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
 
+        const { accessToken, refreshToken } = createTokens(username)
+        setLoginCookies(res, accessToken, refreshToken)
         success(res)
 
     } catch (e) {
@@ -112,4 +114,24 @@ const register = async (req, res) => {
 
 }
 
-module.exports = { userLogin, logout, adminLogin, register }
+const getAccountType = async (req, res) => {
+
+    try {
+
+        const username = req.username
+
+        const accountType  = await db.call('GET ACCOUNT TYPE', [username] ) 
+        const accountTypeJSON = makeAccountTypeFromDb(accountType)
+
+        success(res, {accountType: accountTypeJSON})
+
+    } catch (e) {
+
+        internalError(res, e.toString())
+
+    }
+
+
+}
+
+module.exports = { userLogin, logout, adminLogin, register, getAccountType }

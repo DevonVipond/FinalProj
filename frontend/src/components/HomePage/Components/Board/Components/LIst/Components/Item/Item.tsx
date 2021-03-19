@@ -10,6 +10,8 @@ import { Match } from "../../../../../../../../Models/Match";
 import { ConnectWithMatch } from "../../../../../../../../UseCases/ConnectWithMatch/ConnectWithMatch";
 import { AcceptFriendRequest } from "../../../../../../../../UseCases/AcceptFriendRequest/AcceptFriendRequest";
 import { RejectFriendRequest } from "../../../../../../../../UseCases/RejectFriendRequest/RejectFriendRequest";
+import { ReportFriend } from "../../../../../../../../UseCases/ReportFriend/ReportFriend";
+import ReportUserModal from "../ReportUserModal/ReportUserModal"
 
 
 const skillLevelToColor = (skillLevel: string): string => {
@@ -49,6 +51,19 @@ const activityIcon = (activityName: string, skillLevel: string) => {
 }
 
 export const FriendItem = ({ user, reloadBoard }: { user: Friend, reloadBoard: Function }) => {
+    const [ showModal, setShowModal ] = React.useState(false)
+
+    const reportFriend = (e: any, messageBoxId: string) => {
+        const reportMessageComponent: any = document.getElementById(messageBoxId)
+
+        if (reportMessageComponent)
+            ReportFriend(user, reportMessageComponent.value)
+                .then((res: any) => { setShowModal(false); reloadBoard();  })
+                .catch((err: any) => { logError(err); })
+    }
+
+    reportFriend.bind(user)
+
     return (
         <div className='itemContainer' >
             <a>
@@ -57,6 +72,11 @@ export const FriendItem = ({ user, reloadBoard }: { user: Friend, reloadBoard: F
                 <div>
                     { user.activities().map( a => ( activityIcon(a.name(), a.skillLevel()) ) ) }
                 </div>
+                <div className="ui bottom attached button" onClick={() => setShowModal(true)} id="addButton" >
+                    <i className="add icon" ></i>
+                    Report
+                </div>
+                <ReportUserModal reportFriend={reportFriend} show={showModal} onHide={() => setShowModal(false)}/>
             </a>
         </div>
     )

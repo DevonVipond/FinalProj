@@ -1,0 +1,49 @@
+#define Activity {name: string, skillLevel: string in (beginner | intermediate | advanced)}
+#define Friend {name: string, activities: Array<Activity>, relativeDistance: number}
+#define IncomingFriendRequest { requestId: number, creatorUsername: string, relativeDistance: number, activities: Array<Activity> }
+#define Match { username: string, relativeDistance: number, activities: Array<Activity> }
+
+get /distance
+	return: {distance: number}
+
+get /friends
+	return Array<Friend>
+
+get /incomingFriendRequests
+	return Array<IncomingFriendRequest>
+
+get /activities
+	return Array<Activity>
+
+get /accountType
+	return {accountType: string in ('Regular' | 'Premium')}
+
+get /matches
+	return Array<Match>
+
+post /friendRequests/${id}/reject
+
+post /friendRequests/${id}/accept
+
+post login 
+	body: {username: username, password: password}
+
+post /register 
+	body: {username: username, password: password}
+
+post /activities/:activityName/add?skillLevel
+	query: string in ('beginner', 'intermediate', 'advanced')
+
+post /activities/:activityName/remove
+
+post /friendRequests/:friendRequestId/accept
+
+post /activities 
+	body: {name: string, skillLevel: string in ('beginner, 'intermediate', 'advanced')}
+
+post /distance
+	body: {distance: number}
+
+post /users/:userId/connect 
+	body: {message: string}
+

@@ -1,4 +1,5 @@
 import { api } from "../../Api/Api"
+import authService from "../AuthService"
 import { LoginUser } from "../Login/Login"
 
 const REGULAR_ACCOUNT = 'Regular'
@@ -15,15 +16,15 @@ export async function Register(username: string, password: string, accountType: 
 
         const body = {username, password, accountType}
 
-        await api.post(`/register`, body)
+        await api.post(`/user/register`, body)
 
-        sessionStorage.setItem('auth', accountType)
+        authService.setAuth(accountType)
 
     } catch (e) {
 
         console.error('E: GetBoard ' + e.toString())
 
-        sessionStorage.removeItem('auth')
+        authService.removeAuth()
         
         throw e
 

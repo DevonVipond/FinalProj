@@ -1,4 +1,5 @@
 import { api } from "../../Api/Api"
+import authService from "../AuthService"
 
 export async function LoginUser(username: string, password: string): Promise<void> {
 
@@ -6,21 +7,21 @@ export async function LoginUser(username: string, password: string): Promise<voi
 
         const body = {username, password}
 
-        await api.post(`login`, body)
+        await api.post(`/user/login`, body)
 
-        const accountType: string = await api.get(`/accountType`)
+        const accountType: string = await api.get(`/user/account-type`)
 
-        sessionStorage.setItem('auth', accountType)
+        authService.setAuth(accountType)
 
 
     } catch (e) {
 
         console.error('E: Login ' + e.toString())
 
-        sessionStorage.removeItem('auth')
+        authService.removeAuth()
 
         // TODO: REMOVE
-        sessionStorage.setItem('auth', 'regular')
+        authService.setAuth('Premium')
         return;
         
         throw e

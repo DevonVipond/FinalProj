@@ -2,7 +2,7 @@
 
 var router = require('express').Router()
 const {verify} = require('../../middlewares/auth')
-const { getReportedUsers, resolveReport, deleteUser} = require('./controller')
+const { getReportedUsers, resolveReport, deleteUser } = require('./controller')
 
 router.get('/reports', verify, getReportedUsers)
 router.post('/reports/resolve', verify, resolveReport)

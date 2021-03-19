@@ -1,6 +1,6 @@
 import { badRequest, internalError, success } from "../responseHandler"
 
-const db = []
+const db = require('../../db/index')
 
 const getHome = async (req, res) => {
     const { username } = req.username
@@ -140,5 +140,5 @@ const rejectFriendRequest = async (req, res) => {
 }
 
 module.exports = {
-    getHome, acceptFriendRequest, connectWithMatch, rejectFriendRequest
+    getHome, acceptFriendRequest, connectWithMatch, rejectFriendRequest, reportFriend
 }

@@ -2,7 +2,7 @@ import React from "react";
 import './ActivityModal.css'
 import { Checkbox } from "semantic-ui-react";
 import { Activity } from "../../../../Models/Activity";
-import CreateModal from "../../../Shared/Modal/Index";
+import CreateModal from "../../../Shared/Modal/CreateModal";
 
 const createCheckBoxes = () => {
     let boxes: any = []

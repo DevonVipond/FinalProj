@@ -1,0 +1,24 @@
+export function createTokens (username) {
+    try {
+        const accessToken = jwt.sign({id: username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: process.env.ACCESS_TOKEN_LIFE})
+        const refreshToken = jwt.sign({id: username}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: process.env.REFRESH_TOKEN_LIFE})
+
+        return {accessToken, refreshToken}
+    } catch (err) {
+        console.log(err)
+        throw err
+    }
+}
+
+export function convertGPSToCity(longitude, latitude) {
+
+    // TODO
+    return "CALGARY"
+}
+
+export function makeUserFromDb(rows) {
+
+    const { username, password } = rows[0]
+
+    return { username, password }
+}

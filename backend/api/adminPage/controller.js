@@ -8,7 +8,7 @@ const getReportedUsers = async (req, res) => {
     const adminUsername  = req.username
 
     try {
-        const reports = await db.call('GET REPORTED USERS WITHOUT AN ASSIGNED ADMIN', adminUsername)// returns { reportedUsername, timesReported, reporterComments }
+        const reports = await db.call('GET REPORTED USERS WITHOUT AN ASSIGNED ADMIN', adminUsername)// returns {primaryKey, reportedUsername, timesReported, reporterComments }
 
         const reportsJSON = makeReportsFromDb(reports)
 
@@ -22,7 +22,7 @@ const getReportedUsers = async (req, res) => {
 
 const resolveReport = async (req, res) => {
 
-    const { adminId } = req.cookies
+    const adminUsername = req.username
     const { reportRowPrimaryKey ,adminComments } = req.body
 
     if (!reportRowPrimaryKey || !adminComments) {
@@ -32,7 +32,7 @@ const resolveReport = async (req, res) => {
 
     try {
 
-        const success = await db.call('RESOLVE REPORT', adminId, reportRowPrimaryKey, adminComments)
+        const success = await db.call('RESOLVE REPORT', adminUsername, reportRowPrimaryKey, adminComments)
         if (!success) {
             badRequest(res, "Report does not exist!")
             return

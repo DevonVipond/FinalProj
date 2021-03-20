@@ -6,6 +6,7 @@ var mysqlConnection = mysql.createConnection({
   user: 'admin',
   password: 'thisclasssucks',
   database: 'activities_app',
+  multipleStatements: true
 });
 
 mysqlConnection.connect(function(err) {
@@ -13,12 +14,11 @@ mysqlConnection.connect(function(err) {
   console.log("Connected to mysql database!");
 });
 
-//mysqlConnection.query('show tables;', (err, result) => {
-////mysqlConnection.query('show databases', (err, result) => {
-//  if (err) { console.log(err)}
-//  if (result) { console.log('success!' + result)}
-//  console.log(JSON.stringify(result))
-//})
+mysqlConnection.query('call authenticateUser(?,?, @res); select @res;', ['test', 'password'], function(err, result) {
+  if (err) { console.log(err)}
+  console.log(result[1][0]['@res'])
+
+})
 
 module.exports = mysqlConnection
   //host: process.env.DB_HOST,

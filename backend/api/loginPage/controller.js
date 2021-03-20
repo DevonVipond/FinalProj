@@ -8,7 +8,7 @@ const userLogin = async (req, res) => {
     const { username, password, longitude, latitude } = req.body
 
     if (!username || !password || !longitude || !latitude) {
-        badRequest(res)
+        badRequest(res, 'Missing parameters!')
         return 
     }
 
@@ -16,21 +16,23 @@ const userLogin = async (req, res) => {
 
         const city = convertGPSToCity(longitude, latitude)
 
-        const loginSuccessful = await db.call('VERIFY USER LOGIN CREDENTIALS', [username, password])
-        if (!loginSuccessful) {
+        const db_result = await db.call('call authenticateUser(?,?, @res); select @res;', [username, password])
+        console.log('db_result', db_result[0]['@res'])
+
+        if (db_result[0]['@res']  != 1) {
 
             badRequest(res, "Authentication failed!")
             return
             
         }
 
-        const success = await db.call('ADD USERS LOCATION', [longitude, latitude, city]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        //const success = await db.call('ADD USERS LOCATION', [longitude, latitude, city]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
 
-        if (!success) {
+        //if (!success) {
 
-            throw Error('Unable to add users location to database')
+        //    throw Error('Unable to add users location to database')
 
-        }
+        //}
 
         const { accessToken, refreshToken } = createTokens(username)
         setLoginCookies(res, accessToken, refreshToken)

@@ -6,7 +6,6 @@ if (result.error) {
 const express = require('express');
 const app = express();
 const http = require('http');
-const path = require('path')
 
 const port = process.env.PORT || 5066;
 
@@ -36,7 +35,7 @@ const getLoggerForStatusCode = (statusCode) => {
 }
 
 const logRequestStart = (req, res, next) => {
-    console.info(`${req.method} ${req.originalUrl}`)
+    console.info(`${req.method} ${req.originalUrl} ${JSON.stringify(req.body)}`)
 
     const cleanup = () => {
         res.removeListener('finish', logFn)
@@ -48,6 +47,7 @@ const logRequestStart = (req, res, next) => {
         cleanup()
         const logger = getLoggerForStatusCode(res.statusCode)
         logger(`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent`)
+        logger(``)
     }
 
     const abortFn = () => {
@@ -84,7 +84,10 @@ app.use(function(req, res, next) {
     next()
 })
 
-app.use(require('./api/loginPage/router'))
+app.use(require('./api/loginPage/routes'))
+//app.use(require('./api/adminPage/routes'))
+//app.use(require('./api/homePage/routes'))
+//app.use(require('./api/settingsPage/routes'))
 app.use(require('./middlewares/errorHandler/index.js'))
 
 const server = http.createServer(app)

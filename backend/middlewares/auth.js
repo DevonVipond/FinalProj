@@ -3,11 +3,11 @@ const { unauthorized } = require('../api/responseHandler')
 
 const verify = async(req, res, next) => {
     try {
-        const accessToken = req.cookies['access-token']
+        const accessToken = req.cookies['refresh-token']
 
         if (!accessToken) { throw new Error('No access token!') }
 
-        const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
+        const decodedToken = jwt.verify(accessToken, process.env.REFRESH_TOKEN_SECRET)
 
         const id = decodedToken.id
 
@@ -21,7 +21,7 @@ const verify = async(req, res, next) => {
 
         console.log(err)
         
-        unauthorized('Unable to create access/refresh tokens!')
+        unauthorized(res, 'Unable to create access/refresh tokens!')
     }
 }
 
@@ -38,7 +38,7 @@ const verify = async(req, res, next) => {
 
 
 const setLoginCookies = (res, accessToken, refreshToken) => {
-    res.cookie('access-token', accessToken, {httpOnly: true, sameSite: 'lax', maxAge: process.env.ACCESS_TOKEN_LIFE})
+    res.cookie('access-token', accessToken, {httpOnly: true, maxAge: process.env.ACCESS_TOKEN_LIFE})
     res.cookie('refresh-token', refreshToken, {httpOnly: true, maxAge: process.env.REFRESH_TOKEN_LIFE})
 }
 

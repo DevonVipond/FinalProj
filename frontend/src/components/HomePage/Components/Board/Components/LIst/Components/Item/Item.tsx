@@ -12,6 +12,9 @@ import { AcceptFriendRequest } from "../../../../../../../../UseCases/AcceptFrie
 import { RejectFriendRequest } from "../../../../../../../../UseCases/RejectFriendRequest/RejectFriendRequest";
 import { ReportFriend } from "../../../../../../../../UseCases/ReportFriend/ReportFriend";
 import ReportUserModal from "../ReportUserModal/ReportUserModal"
+import { ReportedUser } from "../../../../../../../../Models/ReportedUser";
+import { DeleteUser } from "../../../../../../../../UseCases/DeleteUser/DeleteUser";
+import { ResolveReport } from "../../../../../../../../UseCases/ResolveReport/ResolveReport";
 
 
 const skillLevelToColor = (skillLevel: string): string => {
@@ -87,12 +90,19 @@ const logError = (e: any) => {
 }
 
 export const MatchItem = ({ user , reloadBoard }: { user: Match, reloadBoard: Function }) => {
-    const connect = (e: any) => {
-        ConnectWithMatch(user, "hello")
-            .then((res: any) => { reloadBoard() })
-            .catch((err: any) => { logError(err) })
+
+    const [ showModal, setShowModal ] = React.useState(false)
+
+    const connect = (e: any, messageBoxId: string) => {
+        const connectMessageComponent: any = document.getElementById(messageBoxId)
+
+        if (connectMessageComponent)
+            ConnectWithMatch(user, connectMessageComponent.value)
+                .then((res: any) => { reloadBoard() })
+                .catch((err: any) => { logError(err) })
     }
 
+    connect.bind(user)
     return (
         <div className='itemContainer' >
             <a>
@@ -101,21 +111,77 @@ export const MatchItem = ({ user , reloadBoard }: { user: Match, reloadBoard: Fu
                 <div>
                     { user.activities().map( a => ( activityIcon(a.name(), a.skillLevel()) ) ) }
                 </div>
-                <div className="ui bottom attached button" onClick={(e: any) => connect(e)} id="addButton">
+                <div className="ui bottom attached button" onClick={() => setShowModal(true)} id="addButton" >
                     <i className="add icon" ></i>
-                    Add
+                    Connect
                 </div>
+                <ReportUserModal reportFriend={connect} show={showModal} onHide={() => setShowModal(false)}/>
+            </a>
+        </div>
+    )
+}
+
+export const ReportedUserItem  = ({ user , reloadBoard }: { user: ReportedUser, reloadBoard: Function }) => {
+    const [ showModal, setShowModal ] = React.useState(false)
+    const username = user.username
+    const primaryKey = user.primaryKey
+
+    const deleteUser = (e: any) => {
+        DeleteUser(username, primaryKey)
+            .then((res: any) => { reloadBoard() })
+            .catch((err: any) => { logError(err) })
+    }
+
+    deleteUser.bind(username)
+    deleteUser.bind(primaryKey)
+
+    const resolve = (e: any, messageBoxId: string) => {
+        const connectMessageComponent: any = document.getElementById(messageBoxId)
+
+        if (connectMessageComponent)
+            ResolveReport(primaryKey, connectMessageComponent.value)
+                .then((res: any) => { reloadBoard() })
+                .catch((err: any) => { logError(err) })
+    }
+
+    resolve.bind(primaryKey)
+
+
+    deleteUser.bind(user)
+    return (
+        <div className='itemContainer' >
+            <a>
+                <p className='itemLabel' id='companyLabel'>{username}</p>
+                <div>
+                </div>
+                <div className="ui bottom attached button" onClick={(e: any)=> deleteUser(e)} id="addButton" >
+                    <i className="add icon" ></i>
+                    Delete User
+                </div>
+                <div className="ui bottom attached button" onClick={() => setShowModal(true)} id="addButton" >
+                    <i className="add icon" ></i>
+                    Resolve
+                </div>
+                <ReportUserModal reportFriend={resolve} show={showModal} onHide={() => setShowModal(false)}/>
             </a>
         </div>
     )
 }
 
 export const FriendRequestItem = ({ user , reloadBoard }: { user: FriendRequest, reloadBoard: Function }) => {
-    const accept = (e: any) => {
-        AcceptFriendRequest(user)
-            .then((res: any) => { reloadBoard() })
-            .catch((err: any) => { logError(err) })
+    const [ showModal, setShowModal ] = React.useState(false)
+
+    const accept = (e: any, messageBoxId: string) => {
+        const messageComponent: any = document.getElementById(messageBoxId)
+
+        if (messageComponent)
+            AcceptFriendRequest(user, messageComponent.value)
+                .then((res: any) => { reloadBoard() })
+                .catch((err: any) => { logError(err) })
     }
+
+    accept.bind(user)
+
     const reject = (e: any) => {
         RejectFriendRequest(user)
             .then((res: any) => { reloadBoard() })
@@ -129,10 +195,11 @@ export const FriendRequestItem = ({ user , reloadBoard }: { user: FriendRequest,
                 <div>
                     { user.activities().map( a => ( activityIcon(a.name(), a.skillLevel()) ) ) }
                 </div>
-                <div className="ui bottom attached button" id="addButton" onClick={(e: any) => accept(e)}>
-                    <i className="add icon"></i>
-                    Add
+                <div className="ui bottom attached button" onClick={() => setShowModal(true)} id="addButton" >
+                    <i className="add icon" ></i>
+                    Accept
                 </div>
+                <ReportUserModal reportFriend={accept} show={showModal} onHide={() => setShowModal(false)}/>
                 <div className="ui bottom attached button" id="addButton" onClick={(e: any) => reject(e)} >
                     <i className="minus icon"></i>
                     Reject

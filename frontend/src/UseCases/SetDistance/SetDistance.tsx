@@ -6,7 +6,8 @@ export async function SetDistance(distance: string): Promise<void> {
 
     try {
 
-        await api.post('/distance', distance)
+        await api.post('/distance', {distance})
+        return Promise.resolve()
 
     } catch (e) {
 

@@ -2,7 +2,6 @@ import { api } from "../../Api/Api";
 import { friendApi } from "../../Api/FriendService/FriendService";
 import { Activity } from "../../Models/Activity";
 import { Friend } from "../../Models/Friend";
-import { FriendRequest } from "../../Models/FriendRequest";
 
 export async function FetchFriends(): Promise<Array<Friend>> {
 
@@ -25,12 +24,12 @@ export async function FetchFriends(): Promise<Array<Friend>> {
     ]
 
     const friends = [
-        new FriendRequest({ id: '1', username: 'Karma', distance: '15km', activities: activitiesA }),
-        new FriendRequest({ id: '1', username: 'Alexandro', distance: '10km', activities: activitiesB }),
-        new FriendRequest({ id: '1', username: 'James', distance: '1km', activities: activitiesC }),
-        new FriendRequest({ id: '1', username: 'Optimus', distance: '22km', activities: activitiesD }),
-        new FriendRequest({ id: '1', username: 'Rocket Man', distance: '75km', activities: activitiesA }),
-        new FriendRequest({ id: '1', username: 'Nas', distance: '45km', activities: activitiesA }),
+        new Friend({ username: 'Karma', distance: '15km', activities: activitiesA }),
+        new Friend({ username: 'Alexandro', distance: '10km', activities: activitiesB }),
+        new Friend({ username: 'James', distance: '1km', activities: activitiesC }),
+        new Friend({ username: 'Optimus', distance: '22km', activities: activitiesD }),
+        new Friend({ username: 'Rocket Man', distance: '75km', activities: activitiesA }),
+        new Friend({ username: 'Nas', distance: '45km', activities: activitiesA }),
     ]
 
 
@@ -40,7 +39,7 @@ export async function FetchFriends(): Promise<Array<Friend>> {
 
         const friends: Array<Friend> = payload.map((f: any) => {
 
-            return new FriendRequest(f)
+            return new Friend(f)
 
         })
 

@@ -8,6 +8,10 @@ class AuthService {
         sessionStorage.removeItem('auth')
     }
 
+    getAuth(): string | null{
+        return sessionStorage.getItem('auth')
+    }
+
     isAuthenticated(): boolean {
         if (sessionStorage.getItem('auth')) {
             return true

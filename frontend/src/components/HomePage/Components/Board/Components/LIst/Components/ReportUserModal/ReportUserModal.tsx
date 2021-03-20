@@ -4,7 +4,6 @@ import 'semantic-ui-css/semantic.min.css';
 const ReportUserModal = ({ reportFriend, onHide }: {reportFriend: Function, onHide: any}) => {
     const reportFriendAndClose = (e: any, reportUserInputId: string) => {
         reportFriend(e, reportUserInputId)
-
     }
 
     return (
@@ -17,6 +16,7 @@ const ReportUserModal = ({ reportFriend, onHide }: {reportFriend: Function, onHi
         </div>
     )
 }
+
 
 const modal = createModal(ReportUserModal)
 

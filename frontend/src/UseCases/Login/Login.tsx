@@ -5,7 +5,9 @@ export async function LoginUser(username: string, password: string): Promise<voi
 
     try {
 
-        const body = {username, password}
+        const longitude = '0'
+        const latitude  = '0'
+        const body = {username, password, longitude, latitude}
 
         await api.post(`/user/login`, body)
 
@@ -20,10 +22,6 @@ export async function LoginUser(username: string, password: string): Promise<voi
 
         authService.removeAuth()
 
-        // TODO: REMOVE
-        authService.setAuth('Premium')
-        return;
-        
         throw e
 
     }

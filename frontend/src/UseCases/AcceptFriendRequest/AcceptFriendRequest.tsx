@@ -3,19 +3,22 @@ import { FriendRequest } from "../../Models/FriendRequest";
 import { UserState } from "../../Models/UserState";
 
 
-export async function AcceptFriendRequest(request: FriendRequest): Promise<void> {
+export async function AcceptFriendRequest(request: FriendRequest, message: string): Promise<void> {
 
     try {
 
-        const id = request.getId()
-        await api.post(`/friendRequests/${id}/accept`)
+        const body = {
+            requestorUsername: request.username(),
+            message
+        }
+
+        await api.post(`/friend-requests/accept`, body)
+
+        return Promise.resolve()
 
     } catch (e) {
 
         console.error('E: AcceptFriendRequest ' + e)
-
-        UserState.Instance()._incomingFriendRequests = UserState.Instance()._incomingFriendRequests.filter((a: any) => {return a.getId() !== request.getId()})
-        return;
 
         throw e
 

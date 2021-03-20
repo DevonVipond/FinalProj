@@ -4,17 +4,8 @@ import React from "react";
 import { GetActivies } from '../../UseCases/GetActivity/GetActivity';
 import { AddActivity } from '../../UseCases/AddActivity/AddActivity';
 import { RemoveActivity } from '../../UseCases/RemoveActivity/RemoveActivity';
-
-//const activities = [
-//    new Activity({name: 'skiing', skillLevel: Activity.SkillLevel.ADVANCED}),
-//    new Activity({name: 'soccer', skillLevel: Activity.SkillLevel.INTERMEDIATE}),
-//    new Activity({name: 'football', skillLevel: Activity.SkillLevel.BEGINNER}),
-//]
-//const dummyAuthenticatedUser = new PremiumUser({
-//    username: 'Njord',
-//    distance: '12 km',
-//    activities: activities
-//})
+import authService from '../../UseCases/AuthService';
+import RegularUserSettingsPage from './RegularUserSettingsPage';
 
 class SettingsPageContainer extends React.Component<any, any>{
     constructor(props: any) {
@@ -22,11 +13,26 @@ class SettingsPageContainer extends React.Component<any, any>{
     }
 
     render() {
-        return <SettingsPage 
-                    getActivities={GetActivies}
-                    removeActivity={RemoveActivity}
-                    addActivity={AddActivity} 
-               />;
+        authService.setAuth('REGULAR')
+        const accountType: any = authService.getAuth()
+        if (accountType === null) return <h3>Failed to find account type!</h3>
+        switch (accountType.toUpperCase()) {
+            case "REGULAR":
+                return <RegularUserSettingsPage />
+            case "PREMIUM":
+                return <SettingsPage 
+                            getActivities={GetActivies}
+                            removeActivity={RemoveActivity}
+                            addActivity={AddActivity} 
+                    />;
+            case "ADMIN":
+                break;
+
+            default:
+                return <h3> Unknown Account Type { accountType } </h3>
+
+        }
+
     }
 }
 

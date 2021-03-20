@@ -7,15 +7,18 @@ export async function ConnectWithMatch(match: Match, message: string): Promise<v
 
     try {
 
-        const username: string = match.username()
-        await api.post(`/matches/:${username}/connect`, message)
+        const body = {
+            message,
+            recipientUsername: match.username()
+        }
+
+        await api.post(`/matches/connect`, body)
+
+        return Promise.resolve()
 
     } catch (e) {
 
         console.error('E: ConnectWithMatch ' + e)
-
-        UserState.Instance()._matches = UserState.Instance()._matches.filter((a: Match) => {return a.username() !== match.username()})
-        return;
 
         throw e
 

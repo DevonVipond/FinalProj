@@ -1,9 +1,11 @@
 import React, {useEffect} from "react";
 import List from './Components/LIst/ListContainer'
 import {Match} from "../../../../Models/Match";
-import { FriendItem, MatchItem, FriendRequestItem } from "./Components/LIst/Components/Item/Item";
+import { FriendItem, MatchItem, FriendRequestItem, ReportedUserItem } from "./Components/LIst/Components/Item/Item";
 import {Friend} from "../../../../Models/Friend";
 import { FriendRequest } from "../../../../Models/FriendRequest";
+import { ReportedUser } from "../../../../Models/ReportedUser";
+import authService from "../../../../UseCases/AuthService";
 
 const createFriendList = (title: string, users: Array<Friend>, reloadBoard: Function) => {
     return (
@@ -40,7 +42,6 @@ type BoardProps = {
 }
 
 const Board = ({ friendRequests, friends, matches, reloadBoard }: BoardProps) => {
-
     return (
         <div id='board'>
             { createMatchesList('Matches', matches, reloadBoard) }

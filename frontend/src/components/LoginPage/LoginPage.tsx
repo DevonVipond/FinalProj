@@ -31,7 +31,6 @@ const register = (uId: string, pId: string, dId: string) => {
     const uForm: any = document.getElementById(uId)
     const pForm: any = document.getElementById(pId)
 
-    console.log('regiser', dropdownVal)
     Register(uForm.value, pForm.value, dropdownVal)
 }
 
@@ -111,9 +110,10 @@ const UILoginForm = (name: string) => {
 }
 
 const Login = () => {
-    if (sessionStorage.getItem('auth')) {
-        return <Redirect to='/home' />
-    }
+    // TODO REMOVE
+    //if (sessionStorage.getItem('auth')) {
+    //    return <Redirect to='/home' />
+    //}
     return (
         <div >
             { UILoginForm('Login User') }

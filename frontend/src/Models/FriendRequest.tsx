@@ -7,10 +7,10 @@ type Props = {
 
 export class FriendRequest extends User {
 
-    private _id: string
+    private _id: string = ""
     constructor({id, username, distance, activities}: UserProps & Props) {
         super({username, distance, activities})
-        this._id = id
+        this._id = id || ""
     }
 
     public getId(): string { return this._id; }

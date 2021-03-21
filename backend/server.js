@@ -87,7 +87,7 @@ app.use(function(req, res, next) {
 app.use(require('./api/loginPage/routes'))
 //app.use(require('./api/adminPage/routes'))
 //app.use(require('./api/homePage/routes'))
-//app.use(require('./api/settingsPage/routes'))
+app.use(require('./api/settingsPage/routes'))
 app.use(require('./middlewares/errorHandler/index.js'))
 
 const server = http.createServer(app)

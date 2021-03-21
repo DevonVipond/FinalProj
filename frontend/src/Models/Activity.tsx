@@ -34,10 +34,12 @@ export class Activity {
     private _skillLevel: string
 
     constructor({name, skillLevel}: props) {
+        name = name.toLowerCase()
+        skillLevel = skillLevel.toLowerCase()
         __validate(name, skillLevel)
 
-        this._name = name
-        this._skillLevel = skillLevel
+        this._name = name.toLowerCase()
+        this._skillLevel = skillLevel.toLowerCase()
     }
 
     public name(): string { return this._name }

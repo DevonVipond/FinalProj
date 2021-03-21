@@ -1,14 +1,5 @@
 const db = require(".././../db/index")
-const { success, internalError, badRequest } = require("../responseHandler")
-
-const makeRequestHandler = async (req, res, handle) => {
-    try {
-        handle(req, res)
-    } catch (e) {
-        console.error("makeRequestHandler -> Exception: " + e)
-        internalError(req, e.toString())
-    }
-}
+const { success, internalError, badRequest, renameKeys } = require("../responseHandler")
 
 // INPUT { activityName: string, skillLevel: string }
 const addActivity = async (req, res) => {
@@ -25,9 +16,14 @@ const addActivity = async (req, res) => {
 
         await db.call('ADD ACTIVITY', [username, activityName, skillLevel]) 
 
-    } catch (e) { throw e }
+        success(res)
 
-    success(res)
+    } catch (e) {
+
+        internalError(res, 'Unable to add activity!' + e)
+
+    }
+
 
 
 }
@@ -52,7 +48,9 @@ const removeActivity = async (req, res) => {
         }
 
         success(res)
-    } catch (e) { throw e }
+    } catch (e) {
+        internalError(res, 'Unable to retrieve settings page' + e)
+    }
 
 }
 
@@ -77,42 +75,56 @@ const setDistance = async (req, res) => {
 
         success(200)
 
-    } catch (e) { throw e}
+    } catch (e) { 
+        internalError(res, 'Unable to retrieve settings page' + e)
+    }
 
 }
 
-const getSettingsPage = (req, res) => {
+const getSettingsPage = async (req, res) => {
 
-    const username = req.username
+    let username = req.username
+    if (!username) username = 'adolf'
 
     try {
-        const distance   =   await db.call('GET DISTANCE', [username]) 
-        const activities = await db.call('GET ACTIVITIES', [username]) 
+        const getDistanceResult   =   await db.call('call GET_DISTANCE(?)', [username]) 
+        const getActivitiesResult = await db.call('call GET_ACTIVITIES(?)', [username]) 
+
+        let distance = db.findResults(getDistanceResult, 'Distance')
+        console.log('found distance \n\n', distance)
+        let activities = db.findResults(getActivitiesResult)
+        console.log('found activities \n\n', activities)
+
         if (!distance) {
             badRequest(res, `unable to retrieve distance`)
             return
         }
+
         if (!activities) {
-            badRequest(res, `unable to retrieve distance`)
+            badRequest(res, `unable to retrieve activities`)
             return
         }
 
-        const distanceJSON = makeDistanceFromDb(distance)
-        const activitiesJSON = makeActivitiesFromDb(activities)
-
+        activities = renameKeys(activities, 'Activity', 'name', true)
+        activities = renameKeys(activities, 'SkillLevel', 'skillLevel', true)
         const response = {
-            distance: distanceJSON,
-            activities: activitiesJSON
+            distance,
+            activities
         }
+        console.log('building response: ', JSON.stringify(response))
 
         success(res, response)
 
-    } catch (e) { throw e }
+    } catch (e) { 
+
+        internalError(res, 'Unable to retrieve settings page ' + e.toString())
+
+    }
 }
 
 module.exports = {
-    addActivity: makeRequestHandler(addActivity),
-    removeActivity: makeRequestHandler(removeActivity),
-    setDistance: makeRequestHandler(setDistance),
-    getSettingsPage: makeRequestHandler(getSettingsPage),
+    addActivity: addActivity,
+    removeActivity: removeActivity,
+    setDistance: setDistance,
+    getSettingsPage: getSettingsPage,
 }

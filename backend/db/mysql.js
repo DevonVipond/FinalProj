@@ -14,15 +14,55 @@ mysqlConnection.connect(function(err) {
   console.log("Connected to mysql database!");
 });
 
-//mysqlConnection.query('call authenticateUser(?,?, @res); select @res;', ['test', 'password'], function(err, result) {
+//mysqlConnection.query('select * from UserActivities',  function(err, result) {
 //  if (err) { console.log(err)}
-//  console.log(result[1][0]['@res'])
+//  console.log(result)
+//
+//})
+//function fancyFind (keyToFind, dataStructure) {
+//
+//    if (!keyToFind || !dataStructure) return null
+//
+//    for (const key in dataStructure) {
+//
+//        const value = dataStructure[key]
+//
+//        if (key == keyToFind) { 
+//
+//            return value            
+//
+//        } else if (key.constructor.name == keyToFind) {
+//
+//          return key
+//
+//        } else if (Array.isArray(value)) { 
+//
+//            const res = fancyFind(keyToFind, value); 
+//
+//            if(res) return res
+//
+//        } else if (typeof dataStructure[key] === 'object' && !Array.isArray(value)) { 
+//
+//            const res = fancyFind(keyToFind, value); 
+//
+//            if(res) return res
+//
+//        }  else {
+//
+//
+//        }
+//    }
+//
+//    return null; 
+//
+//}
+//
+//
+//mysqlConnection.query('call GET_ACTIVITIES(?)', ['adolf'],  function(err, rows) {
+//  if (err) { console.log(err)}
+//  console.log(rows)
+//
 //
 //})
 
 module.exports = mysqlConnection
-  //host: process.env.DB_HOST,
-  //port: process.env.DB_PORT,
-  //user: process.env.DB_USER,
-  //password: process.env.DB_PASSWORD,
-  //database: process.env.DB_NAME

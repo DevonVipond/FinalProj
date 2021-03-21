@@ -21,6 +21,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
     "node-geocoder": "^3.27.0",
+    "node-mysql": "^0.4.2",
     "nodemon": "^2.0.7"
   }
 }

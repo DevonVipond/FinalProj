@@ -19,4 +19,26 @@ const unauthorized = (res, errMessage = undefined) => {
     res.status(401).json(errMessage)
 }
 
-module.exports = { success, internalError, badRequest, unauthorized }
+function renameKeys(dataStructure, oldKeyName, newKeyName, toLower=false) {
+    if (!dataStructure || !oldKeyName || !newKeyName) throw new Error('renameKeys -> missing args!')
+
+    if (Array.isArray(dataStructure)) {
+        dataStructure.forEach((value, index) => {
+            dataStructure[index] = renameKeys(value, oldKeyName, newKeyName, toLower)
+        })
+    }
+
+    if (dataStructure[oldKeyName]) {
+        let transfer = dataStructure[oldKeyName]
+        if (toLower) {
+            transfer = transfer.toLowerCase()
+        }
+        dataStructure[newKeyName] = transfer
+        delete dataStructure[oldKeyName]
+    }
+
+    return dataStructure
+}
+
+
+module.exports = { success, internalError, badRequest, unauthorized, renameKeys }

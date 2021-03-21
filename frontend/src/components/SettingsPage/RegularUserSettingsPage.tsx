@@ -65,8 +65,13 @@ const RegularUserSettingsPage = () => {
     }, [])
 
     const {distance, activities}: any = state
-    const selectedActivity:string = activities[0].name()
-    const selectedSkillLevel:string = activities[0].skillLevel()
+    let selectedActivity:string = Activity.ActivityNames.SOCCER
+    let selectedSkillLevel:string = Activity.SkillLevel.BEGINNER
+
+    if (activities) {
+        selectedActivity = activities[0].name()
+        selectedSkillLevel = activities[0].skillLevel()
+    }
 
     return (
         <div className='settingsContainer'>

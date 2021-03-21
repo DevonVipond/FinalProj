@@ -24,7 +24,7 @@ const userLogin = async (req, res) => {
             
         }
 
-        const success = await db.call('ADD USERS LOCATION', [username, longitude, latitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        const success = await db.call('call addUserLocations(?,?,?)', [username, latitude, longitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
 
         if (!success) {
 
@@ -60,9 +60,10 @@ const adminLogin = async (req, res) => {
 
     try {
 
-        const loginSuccessful = await db.call('VERIFY ADMIN LOGIN CREDENTIALS', [username, password]) 
+        const db_result = await db.call('call authenticateAdmin(?,?, @res); select @res;', [username, password]) 
+        console.log('db_result', db_result[0]['@res'])
 
-        if (!loginSuccessful) {
+        if (db_result[0]['@res']  != 1) {
 
             badRequest(res, "Authentication failed!")
             return
@@ -90,14 +91,14 @@ const register = async (req, res) => {
                 phoneNumber, age, about, accountType, longitude, latitude} = req.body
 
 
-        const is_successful = await db.call('REGISTER', [username, password, gender, firstName, lastName, phoneNumber, age, about, accountType] ) 
+        const is_successful = await db.call('call createUser(?,?,?,?,?,?,?,?,?)', [username, password, accountType, gender, firstName, lastName, phoneNumber, age, about] ) 
 
         if (!is_successful) {
             badRequest(res, 'Failed to register user!')
             return
         }
 
-        await db.call('ADD USERS LOCATION', [username, longitude, latitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        await db.call('call addUserLocations(?,?,?)', [username, latitude, longitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
 
         const { accessToken, refreshToken } = createTokens(username)
         setLoginCookies(res, accessToken, refreshToken)
@@ -117,7 +118,7 @@ const getAccountType = async (req, res) => {
 
         const username = req.username
 
-        const accountType  = await db.call('GET ACCOUNT TYPE', [username] ) 
+        const accountType  = await db.call('call getUserType', [username] ) 
         const accountTypeJSON = makeAccountTypeFromDb(accountType)
 
         success(res, {accountType: accountTypeJSON})

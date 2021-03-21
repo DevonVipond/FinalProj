@@ -2,6 +2,11 @@ const jwt = require('jsonwebtoken')
 const { unauthorized } = require('../api/responseHandler')
 
 const verify = async(req, res, next) => {
+    // TODO: REMOVE
+    req.username = 'adolf'
+    next()
+    return
+
     try {
         const accessToken = req.cookies['refresh-token']
 

@@ -7,6 +7,7 @@ export type GetSettingsT = {
     distance: string,
 }
 
+
 export async function GetSettings(): Promise<GetSettingsT> {
     try {
 

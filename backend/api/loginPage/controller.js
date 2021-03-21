@@ -1,7 +1,7 @@
 const db = require(".././../db/index")
 const { success, internalError, badRequest } = require("../responseHandler")
 const { setLoginCookies, setLogoutCookies} = require('../../middlewares/auth')
-const { createTokens, convertGPSToCity } = require('./helpers')
+const { createTokens } = require('./helpers')
 
 const userLogin = async (req, res) => {
 
@@ -14,8 +14,6 @@ const userLogin = async (req, res) => {
 
     try {
 
-        const city = convertGPSToCity(longitude, latitude)
-
         const db_result = await db.call('call authenticateUser(?,?, @res); select @res;', [username, password])
         console.log('db_result', db_result[0]['@res'])
 
@@ -26,7 +24,7 @@ const userLogin = async (req, res) => {
             
         }
 
-        const success = await db.call('ADD USERS LOCATION', [longitude, latitude, city]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        const success = await db.call('ADD USERS LOCATION', [username, longitude, latitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
 
         if (!success) {
 
@@ -62,9 +60,8 @@ const adminLogin = async (req, res) => {
 
     try {
 
-        const city = convertGPSToCity(longitude, latitude)
-
         const loginSuccessful = await db.call('VERIFY ADMIN LOGIN CREDENTIALS', [username, password]) 
+
         if (!loginSuccessful) {
 
             badRequest(res, "Authentication failed!")
@@ -100,9 +97,7 @@ const register = async (req, res) => {
             return
         }
 
-        const city = convertGPSToCity(longitude, latitude)
-
-        await db.call('ADD USERS LOCATION', [longitude, latitude, city]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        await db.call('ADD USERS LOCATION', [username, longitude, latitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
 
         const { accessToken, refreshToken } = createTokens(username)
         setLoginCookies(res, accessToken, refreshToken)

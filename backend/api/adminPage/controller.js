@@ -8,7 +8,7 @@ const getReportedUsers = async (req, res) => {
     const adminUsername  = req.username
 
     try {
-        const reports = await db.call('GET REPORTED USERS WITHOUT AN ASSIGNED ADMIN', adminUsername)// returns {primaryKey, reportedUsername, timesReported, reporterComments }
+        const reports = await db.call('GET REPORTED USERS WITHOUT AN ASSIGNED ADMIN', [adminUsername])// returns {primaryKey, reportedUsername, timesReported, reporterComments }
 
         const reportsJSON = makeReportsFromDb(reports)
 
@@ -32,7 +32,7 @@ const resolveReport = async (req, res) => {
 
     try {
 
-        const success = await db.call('RESOLVE REPORT', adminUsername, reportRowPrimaryKey, adminComments)
+        const success = await db.call('RESOLVE REPORT', [adminUsername, reportRowPrimaryKey, adminComments])
         if (!success) {
             badRequest(res, "Report does not exist!")
             return
@@ -59,7 +59,7 @@ const deleteUser = async (req, res) => {
     }
 
     try {
-        const success = await db.call('DELETE USER', adminUsername, usernameOfUserToDelete, reportRowPrimaryKey)
+        const success = await db.call('DELETE USER', [adminUsername, usernameOfUserToDelete, reportRowPrimaryKey])
 
         if (!success) {
             badRequest(res, "User has never been reported!")

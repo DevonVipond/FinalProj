@@ -67,7 +67,7 @@ const reportFriend = async (req, res) => {
 
     try {
 
-        const success = await db.call('REPORT FRIEND', username, reportedFriendUsername, message) // NOTE: This will delete the friendship!
+        const success = await db.call('REPORT FRIEND', [username, reportedFriendUsername, message]) // NOTE: This will delete the friendship!
         if (!success) {
             badRequest('Unable to connect to match!')
             return
@@ -94,7 +94,7 @@ const acceptFriendRequest = async (req, res) => {
 
     try {
 
-        const success = await db.call('ACCEPT FRIEND REQUEST', username, requestorUsername, message)
+        const success = await db.call('ACCEPT FRIEND REQUEST', [username, requestorUsername, message] )
 
         if (!success) {
             badRequest(`Friend Request With User ${requestorUsername} does not exist!`)
@@ -122,7 +122,7 @@ const rejectFriendRequest = async (req, res) => {
 
     try {
 
-        const success = await db.call('REJECT FRIEND REQUEST', username, requestorUsername)
+        const success = await db.call('REJECT FRIEND REQUEST', [username, requestorUsername])
 
         if (!success) {
             badRequest(`Friend Request With User ${requestorUsername} does not exist!`)
@@ -149,7 +149,7 @@ const reviewFriend = async (req, res) => {
 
     try {
 
-        const success = await db.call('REVIEW FRIEND', username, friendUsername, message)
+        const success = await db.call('REVIEW FRIEND', [username, friendUsername, message])
 
         if (!success) {
             badRequest(`Friend Review With User ${friendUsername} does not exist!`)

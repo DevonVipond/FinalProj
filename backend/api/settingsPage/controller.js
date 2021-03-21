@@ -13,17 +13,17 @@ const makeRequestHandler = async (req, res, handle) => {
 // INPUT { activityName: string, skillLevel: string }
 const addActivity = async (req, res) => {
 
-    const { userId } = req.cookies
+    const username  = req.username
     const { activityName, skillLevel } = req.body
 
-    if (!activityName, !skillLevel) {
+    if (!activityName || !skillLevel) {
         badRequest(res, `activityName and skillLevel required!`)
         return
     }
 
     try {
 
-        await db.call('ADD ACTIVITY', userId, activityName, skillLevel) 
+        await db.call('ADD ACTIVITY', [username, activityName, skillLevel]) 
 
     } catch (e) { throw e }
 
@@ -35,7 +35,7 @@ const addActivity = async (req, res) => {
 // INPUT { activityName: string }
 const removeActivity = async (req, res) => {
 
-    const { userId } = req.cookies
+    const  username  = req.username
     const { activityName } = req.body
 
     if (!activityName) {
@@ -44,7 +44,7 @@ const removeActivity = async (req, res) => {
     }
 
     try {
-        const success = await db.call('REMOVE ACTIVITY', userId, activityName) 
+        const success = await db.call('REMOVE ACTIVITY', [username, activityName]) 
 
         if (!success) {
             badRequest(res, `User does not have ${activityName} listed`)
@@ -59,7 +59,7 @@ const removeActivity = async (req, res) => {
 // INPUT { distance: number }
 const setDistance = async (req, res) => {
 
-    const { userId } = req.cookies
+    const username  = req.username
     const { distance } = req.body
 
     if (!distance) {
@@ -68,7 +68,7 @@ const setDistance = async (req, res) => {
     }
 
     try {
-        const success = await db.call('SET DISTANCE', userId, distance) 
+        const success = await db.call('SET DISTANCE', [username, distance]) 
 
         if (!success) {
             badRequest(res, `Unable to set distance to: ${distance}`)
@@ -83,11 +83,11 @@ const setDistance = async (req, res) => {
 
 const getSettingsPage = (req, res) => {
 
-    const { userId } = req.cookies
+    const username = req.username
 
     try {
-        const distance   =   await db.call('GET DISTANCE', userId) 
-        const activities = await db.call('GET ACTIVITIES', userId) 
+        const distance   =   await db.call('GET DISTANCE', [username]) 
+        const activities = await db.call('GET ACTIVITIES', [username]) 
         if (!distance) {
             badRequest(res, `unable to retrieve distance`)
             return

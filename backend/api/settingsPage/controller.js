@@ -1,82 +1,45 @@
 const db = require(".././../db/index")
 const { success, internalError, badRequest, renameKeys } = require("../responseHandler")
+const {ACTIVITY_NAMES, ACCOUNT_TYPES } = require('../../constants')
 
-// INPUT { activityName: string, skillLevel: string }
-const addActivity = async (req, res) => {
+// Should probably rename this to set activities
+const setSettings = async (req, res) => {
 
     const username  = req.username
-    const { activityName, skillLevel } = req.body
+    const { activities, distance } = req.body
 
-    if (!activityName || !skillLevel) {
-        badRequest(res, `activityName and skillLevel required!`)
-        return
+    if (!activities) {
+        badRequest(res, 'activities required')
     }
 
     try {
 
-        await db.call('ADD ACTIVITY', [username, activityName, skillLevel]) 
+        //const accountType  = await db.call('call getUserType', [username] )[0]
+        //if (accountType.toLowerCase() !== ACCOUNT_TYPES.PREMIUM && distance) {
+        //    badRequest(res, 'Only premium users can modify their distance!')
+        //    return
+        //}
+
+        Object.values(ACTIVITY_NAMES).forEach( async (activityName) => {
+            try {
+                await db.call('call REMOVE_ACTIVITY(?,?)', [username, activityName.toLowerCase()])
+            } catch (e) {}
+        })
+
+        activities.forEach( async (value) => {
+            const { activityName, skillLevel } = value
+            await db.call('call ADD_ACTIVITY(?,?,?)', [username, activityName.toLowerCase(), skillLevel.toLowerCase()])
+        })
+
+        if (distance)
+            await db.call('call SET_DISTANCE(?,?)', [username, distance])
 
         success(res)
 
     } catch (e) {
 
-        internalError(res, 'Unable to add activity!' + e)
+        internalError(res, 'setActivities -> ' + e)
 
-    }
-
-
-
-}
-
-// INPUT { activityName: string }
-const removeActivity = async (req, res) => {
-
-    const  username  = req.username
-    const { activityName } = req.body
-
-    if (!activityName) {
-        badRequest(res, `activityName required!`)
-        return
-    }
-
-    try {
-        const success = await db.call('REMOVE ACTIVITY', [username, activityName]) 
-
-        if (!success) {
-            badRequest(res, `User does not have ${activityName} listed`)
-            return 
-        }
-
-        success(res)
-    } catch (e) {
-        internalError(res, 'Unable to retrieve settings page' + e)
-    }
-
-}
-
-// INPUT { distance: number }
-const setDistance = async (req, res) => {
-
-    const username  = req.username
-    const { distance } = req.body
-
-    if (!distance) {
-        badRequest(res, 'Distance required!')
-        return
-    }
-
-    try {
-        const success = await db.call('SET DISTANCE', [username, distance]) 
-
-        if (!success) {
-            badRequest(res, `Unable to set distance to: ${distance}`)
-            return
-        }
-
-        success(200)
-
-    } catch (e) { 
-        internalError(res, 'Unable to retrieve settings page' + e)
     }
 
 }
@@ -84,34 +47,31 @@ const setDistance = async (req, res) => {
 const getSettingsPage = async (req, res) => {
 
     let username = req.username
-    if (!username) username = 'adolf'
 
     try {
         const getDistanceResult   =   await db.call('call GET_DISTANCE(?)', [username]) 
-        const getActivitiesResult = await db.call('call GET_ACTIVITIES(?)', [username]) 
+        const getActivitiesResult = await db.call('call GET_ACTIVITIES(?)', [username])
 
-        let distance = db.findResults(getDistanceResult, 'Distance')
-        console.log('found distance \n\n', distance)
-        let activities = db.findResults(getActivitiesResult)
-        console.log('found activities \n\n', activities)
+        let distance = db.findResults(getDistanceResult).map(idx => {
+            return idx.Distance
+        })
 
-        if (!distance) {
-            badRequest(res, `unable to retrieve distance`)
-            return
-        }
+        if (!distance.length) distance = 10
+        else distance = distance[0]
 
-        if (!activities) {
-            badRequest(res, `unable to retrieve activities`)
-            return
-        }
+        let activities = db.findResults(getActivitiesResult).map(a => {
+            return {
+                name: a.Activity.toLowerCase(),
+                skillLevel: a.SkillLevel.toLowerCase(),
+            }
+        })
 
-        activities = renameKeys(activities, 'Activity', 'name', true)
-        activities = renameKeys(activities, 'SkillLevel', 'skillLevel', true)
         const response = {
             distance,
             activities
         }
-        console.log('building response: ', JSON.stringify(response))
+
+        console.log('building response', JSON.stringify((response)))
 
         success(res, response)
 
@@ -123,8 +83,6 @@ const getSettingsPage = async (req, res) => {
 }
 
 module.exports = {
-    addActivity: addActivity,
-    removeActivity: removeActivity,
-    setDistance: setDistance,
-    getSettingsPage: getSettingsPage,
+    getSettingsPage,
+    setSettings
 }

@@ -8,7 +8,7 @@ const userLogin = async (req, res) => {
     const { username, password, longitude, latitude } = req.body
 
     if (!username || !password || !longitude || !latitude) {
-        badRequest(res, 'Missing parameters!')
+        badRequest(res, `Missing parameters! \n ${username}, ${password}, ${longitude}, ${latitude}`)
         return 
     }
 

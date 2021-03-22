@@ -3,7 +3,7 @@ const { unauthorized } = require('../api/responseHandler')
 
 const verify = async(req, res, next) => {
     // TODO: REMOVE
-    req.username = 'adolf'
+    req.username = 'putin'
     next()
     return
 
@@ -40,6 +40,7 @@ const verify = async(req, res, next) => {
 //
 //    }
 //}
+
 
 
 const setLoginCookies = (res, accessToken, refreshToken) => {

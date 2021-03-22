@@ -14,55 +14,55 @@ mysqlConnection.connect(function(err) {
   console.log("Connected to mysql database!");
 });
 
-//mysqlConnection.query('select * from UserActivities',  function(err, result) {
+//mysqlConnection.query('show tables',  function(err, result) {
 //  if (err) { console.log(err)}
 //  console.log(result)
+//  console.log(Object.values(JSON.parse(JSON.stringify(result))))
+//})
+//
+//mysqlConnection.query('select * from usertable',  function(err, result) {
+//  if (err) { console.log(err)}
+//  console.log(result)
+//  //const parsedResult = Object.values(JSON.parse(JSON.stringify(result))).map (a => {
+//  //  return {
+//  //    type: a.UserType
+//  //  }
+//  //})
+//
+//  //console.log(parsedResult)
 //
 //})
-//function fancyFind (keyToFind, dataStructure) {
-//
-//    if (!keyToFind || !dataStructure) return null
-//
-//    for (const key in dataStructure) {
-//
-//        const value = dataStructure[key]
-//
-//        if (key == keyToFind) { 
-//
-//            return value            
-//
-//        } else if (key.constructor.name == keyToFind) {
-//
-//          return key
-//
-//        } else if (Array.isArray(value)) { 
-//
-//            const res = fancyFind(keyToFind, value); 
-//
-//            if(res) return res
-//
-//        } else if (typeof dataStructure[key] === 'object' && !Array.isArray(value)) { 
-//
-//            const res = fancyFind(keyToFind, value); 
-//
-//            if(res) return res
-//
-//        }  else {
-//
-//
-//        }
+//mysqlConnection.query('call REMOVE_ACTIVITY(?,?)', ['putin', 'soccer' ],  function(err, rows) {
+//  if (err) { console.log(err)}
+//  //console.log(rows)
+//})
+//mysqlConnection.query('select * from UserActivities',  function(err, result) {
+//  if (err) { console.log(err)}
+//  const parsedResult = Object.values(JSON.parse(JSON.stringify(result))).map (a => {
+//    return {
+//        name: a.ActivityID
 //    }
+//  })
 //
-//    return null; 
+//  console.log(parsedResult)
 //
-//}
-//
-//
-//mysqlConnection.query('call GET_ACTIVITIES(?)', ['adolf'],  function(err, rows) {
+//})
+//mysqlConnection.query('call SET_DISTANCE(?,?)', ['adolf', '90'],  function(err, rows) {
+//  if (err) { console.log(err)}
+//  //console.log(rows)
+//})
+//mysqlConnection.query('call GET_DISTANCE(?)', [''],  function(err, rows) {
 //  if (err) { console.log(err)}
 //  console.log(rows)
-//
-//
+//})
+//mysqlConnection.query('call ADD_ACTIVITY(?,?,?)', ['devon', 'soccer', 'advanced'],  function(err, rows) {
+//  if (err) { console.log(err)}
+//  //console.log(Object.values(rows))
+//  console.log(Object.values(JSON.parse(JSON.stringify(rows))))
+//})
+//mysqlConnection.query('call GET_UNCHECKED_REPORTS()', [],  function(err, rows) {
+//  if (err) { console.log(err)}
+//  console.log(JSON.parse(JSON.stringify(rows)))
 //})
 
 module.exports = mysqlConnection

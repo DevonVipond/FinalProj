@@ -3,16 +3,37 @@ const { badRequest, internalError, success } = require("../responseHandler")
 const makeReportsFromDb = require('./helpers')
 
 // Returns all reported users where ReportedUsers.adminId == null
-const getReportedUsers = async (req, res) => {
-
-    const adminUsername  = req.username
+const getUncheckedReports = async (req, res) => {
 
     try {
-        const reports = await db.call('GET REPORTED USERS WITHOUT AN ASSIGNED ADMIN', [adminUsername])// returns {primaryKey, reportedUsername, timesReported, reporterComments }
+        const reportsDb = await db.call('call GET_UNCHECKED_REPORTS()', [])// returns {primaryKey, reportedUsername, timesReported, reporterComments }
+        let reports = db.findResults(reportsDb)
 
-        const reportsJSON = makeReportsFromDb(reports)
+        if (!reports) {
+            console.log('adminPageController -> getUncheckedReports -> no unchecked reports at this time!')
+            success(res, {})
+            return
+        }
 
-        success(res, reportsJSON)
+        //export type ReportedUser = {
+        //    username: string,
+        //    reporterComments: string
+        //    timesReported: string,
+        //    primaryKey: string
+        //}
+
+        let response = reports.map(r => {
+            return {
+                //username: string,
+                //reporterComments: string
+                //timesReported: string,
+                //primaryKey: r.reportedID
+
+            }
+        })
+
+        success(res, response)
+
     } catch (e) {
 
         internalError(res, e.toString())
@@ -73,31 +94,4 @@ const deleteUser = async (req, res) => {
 
 }
 
-//const reportFriend = async (req, res) => {
-//
-//    const adminUsername  = req.username
-//    const { friendUsername, message } = req.body
-//
-//    if (!friendUsername || !message) {
-//        badRequest(res, 'friendUsername and message required!')
-//        return
-//    }
-//
-//
-//    try {
-//
-//        const success = await db.call('REPORT FRIEND', adminUsername, friendUsername, message) // THIS WILL DELETE THE FRIEND 
-//
-//        if (!success) {
-//            badRequest(res, "unable to report friend!")
-//            return
-//        }
-//
-//        success(res)
-//
-//    } catch (e) {
-//        internalError(res, e.toString())
-//    }
-//}
-
-module.exports = { getReportedUsers, resolveReport, deleteUser }
+module.exports = { getUncheckedReports, resolveReport, deleteUser }

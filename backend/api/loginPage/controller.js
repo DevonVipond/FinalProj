@@ -15,23 +15,16 @@ const userLogin = async (req, res) => {
 
     try {
 
-        const db_result = await db.call('call authenticateUser(?,?, @res); select @res;', [username, password])
-        console.log('db_result', db_result[0]['@res'])
+        const authResultDb = await db.exec('call authenticateUser(?,?, @res); select @res;', [username, password])
 
-        if (db_result[0]['@res']  != 1) {
-
+        if (!toDTO.wasSuccessful(authResultDb.data)) {
             badRequest(res, "Authentication failed!")
             return
-            
         }
 
-        const success = await db.call('call addUserLocations(?,?,?)', [username, latitude, longitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        const resultDb = await db.exec('call addUserLocations(?,?,?)', [username, latitude, longitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
 
-        if (!success) {
-
-            throw Error('Unable to add users location to database')
-
-        }
+        if (resultDb.affectedRows <= 0) { throw Error('Unable to add users location to database') }
 
         const { accessToken, refreshToken } = createTokens(username)
         setLoginCookies(res, accessToken, refreshToken)
@@ -61,14 +54,11 @@ const adminLogin = async (req, res) => {
 
     try {
 
-        const db_result = await db.call('call authenticateAdmin(?,?, @res); select @res;', [username, password]) 
-        console.log('db_result', db_result[0]['@res'])
+        const resultDb = await db.exec('call authenticateAdmin(?,?, @res); select @res;', [username, password])
 
-        if (db_result[0]['@res']  != 1) {
-
+        if (!toDTO.wasSuccessful(resultDb.data)) {
             badRequest(res, "Authentication failed!")
             return
-            
         }
 
         const { accessToken, refreshToken } = createTokens(username)
@@ -98,13 +88,17 @@ const register = async (req, res) => {
         }
 
 
-        let is_successful = await db.call('call createUser(?,?,?,?,?,?,?,?,?)', [username, password, accountType, gender, firstName, lastName, phoneNumber, age, about] )
-        if (is_successful[0]['@res']  != 1) {
+        let createUserResultDb = await db.exec('call createUser(?,?,?,?,?,?,?,?,?)', [username, password, accountType, gender, firstName, lastName, phoneNumber, age, about] )
+        if (!toDTO.wasSuccessful(createUserResultDb.data)) {
             badRequest(res, "Failed to register user!")
             return
         }
 
-        await db.call('call addUserLocations(?,?,?)', [username, latitude, longitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        const resultDb = await db.exec('call addUserLocations(?,?,?)', [username, latitude, longitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
+        if (resultDb.affectedRows <= 0) {
+            badRequest(res, "Failed to add users location!")
+            return
+        }
 
         const { accessToken, refreshToken } = createTokens(username)
         setLoginCookies(res, accessToken, refreshToken)
@@ -124,8 +118,8 @@ const getAccountType = async (req, res) => {
 
         const username = req.username
 
-        const accountTypeDb  = await db.call('call getUserType', [username] )
-        const accountType = toDTO.accountType(accountTypeDb)
+        const accountTypeDb  = await db.exec('call getUserType(?)', [username] )
+        const accountType = toDTO.accountType(accountTypeDb.data)
 
         success(res, {accountType})
 

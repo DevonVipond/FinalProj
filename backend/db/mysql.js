@@ -20,18 +20,18 @@ mysqlConnection.connect(function(err) {
 //  console.log(Object.values(JSON.parse(JSON.stringify(result))))
 //})
 //
-//mysqlConnection.query('select * from usertable',  function(err, result) {
-//  if (err) { console.log(err)}
-//  console.log(result)
-//  //const parsedResult = Object.values(JSON.parse(JSON.stringify(result))).map (a => {
-//  //  return {
-//  //    type: a.UserType
-//  //  }
-//  //})
-//
-//  //console.log(parsedResult)
-//
-//})
+mysqlConnection.query('select * from admins',  function(err, result) {
+  if (err) { console.log(err)}
+  console.log(result)
+  //const parsedResult = Object.values(JSON.parse(JSON.stringify(result))).map (a => {
+  //  return {
+  //    type: a.UserType
+  //  }
+  //})
+
+  //console.log(parsedResult)
+
+})
 //mysqlConnection.query('call REMOVE_ACTIVITY(?,?)', ['putin', 'soccer' ],  function(err, rows) {
 //  if (err) { console.log(err)}
 //  //console.log(rows)
@@ -47,22 +47,29 @@ mysqlConnection.connect(function(err) {
 //  console.log(parsedResult)
 //
 //})
-//mysqlConnection.query('call SET_DISTANCE(?,?)', ['adolf', '90'],  function(err, rows) {
-//  if (err) { console.log(err)}
-//  //console.log(rows)
-//})
-//mysqlConnection.query('call GET_DISTANCE(?)', [''],  function(err, rows) {
+//mysqlConnection.query('call SET_DISTANCE(?,?)', ['d', '80'],  function(err, rows) {
 //  if (err) { console.log(err)}
 //  console.log(rows)
 //})
-//mysqlConnection.query('call ADD_ACTIVITY(?,?,?)', ['devon', 'soccer', 'advanced'],  function(err, rows) {
+//mysqlConnection.query('call GET_DISTANCE(?)', ['putin'],  function(err, rows) {
+//  if (err) { console.log(err)}
+//  console.log(rows)
+//})
+//mysqlConnection.query('call REMOVE_ACTIVITY(?,?)', ['devon', 'basketball'],  function(err, rows, x) {
 //  if (err) { console.log(err)}
 //  //console.log(Object.values(rows))
-//  console.log(Object.values(JSON.parse(JSON.stringify(rows))))
+//  console.log(rows)
+//  //console.log(Object.values(JSON.parse(JSON.stringify(rows))))
+//})
+//mysqlConnection.query('call ADD_ACTIVITY(?,?,?)', ['devon', 'basketball', 'intermediate'],  function(err, rows, x) {
+//  if (err) { console.log(err)}
+//  //console.log(Object.values(rows))
+//    console.log(rows)
+//  //console.log(Object.values(JSON.parse(JSON.stringify(rows))))
 //})
 //mysqlConnection.query('call GET_UNCHECKED_REPORTS()', [],  function(err, rows) {
 //  if (err) { console.log(err)}
-//  console.log(JSON.parse(JSON.stringify(rows)))
+//  console.log(rows)//JSON.parse(JSON.stringify(rows)))
 //})
 
 module.exports = mysqlConnection

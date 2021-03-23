@@ -14,6 +14,7 @@ class toDTO {
             return idx.Distance
         })
 
+        //if (!distance.length) throw Error('Unable to retrieve distance! ' + JSON.stringify(distanceDb))
         return distance[0]
     }
 
@@ -45,16 +46,11 @@ class toDTO {
     }
 
     wasSuccessful(dbResult) {
-        let flag = false
+        const filteredData = dbResult.filter(element => { return element['@res'] })
 
-        dbResult.forEach((element) => {
-            if (element.success !== null && element.success !== undefined) {
-                flag = element.success
-                return flag
-            }
-        })
+        if (!filteredData.length) return false
 
-        return flag
+        return filteredData[0]['@res'] == 1
     }
 
     reportedUsers(reportedUsersDb) {
@@ -66,16 +62,18 @@ class toDTO {
     }
 
     accountType(dbResult) {
+        // janam needs to fix this
+        //Database -> exec -> [{"UserType":"Regular"},{"UserType":"Regular"},{"UserType":"Regular"},{"UserType":"Premium"},{"UserType":"Premium"},{"UserType":"Premium"},{"UserType":"Freemium"},{"UserType":"Freeloader"},{"UserType":"Freeloader"},{"fieldCount":0,"affectedRows":0,"insertId":0,"serverStatus":34,"warningCount":0,"message":"","protocol41":true,"changedRows":0}]
         const element =  dbResult.find(e => {
-            return !!e.accountType
+            return !!e.UserType
         })
 
         if (!element) throw Error ('Unable to parse accountType from ' + dbResult)
-        return element.accountType
+        return element.UserType
     }
 
 }
 
-const singleton = new toDTO()
+const obj = new toDTO()
 
-module.exports = singleton
+module.exports = obj

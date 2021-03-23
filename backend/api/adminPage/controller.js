@@ -6,8 +6,8 @@ const toDTO = require('../toDTO')
 const getUncheckedReports = async (req, res) => {
 
     try {
-        const reportedUsersDb = await db.procedure('call GET_UNCHECKED_REPORTS()', [])// returns {primaryKey, reportedUsername, timesReported, reporterComments }
-        const reportedUsers = toDTO.reportedUsers(reportedUsersDb)
+        const reportedUsersDb = await db.exec('call GET_UNCHECKED_REPORTS()', [])// returns {primaryKey, reportedUsername, timesReported, reporterComments }
+        const reportedUsers = toDTO.reportedUsers(reportedUsersDb.data)
 
         success(res, reportedUsers)
 

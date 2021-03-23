@@ -44,8 +44,8 @@ const verify = async(req, res, next) => {
 
 
 const setLoginCookies = (res, accessToken, refreshToken) => {
-    res.cookie('access-token', accessToken, {httpOnly: true, maxAge: process.env.ACCESS_TOKEN_LIFE})
-    res.cookie('refresh-token', refreshToken, {httpOnly: true, maxAge: process.env.REFRESH_TOKEN_LIFE})
+    res.cookie('access-token', accessToken, {httpOnly: false, maxAge: process.env.ACCESS_TOKEN_LIFE | 99000})
+    res.cookie('refresh-token', refreshToken, {httpOnly: false, maxAge: process.env.REFRESH_TOKEN_LIFE | 99000})
 }
 
 const setLogoutCookies = (res) => {

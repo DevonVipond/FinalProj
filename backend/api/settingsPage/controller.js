@@ -1,4 +1,5 @@
 const db = require(".././../db/index")
+const toDTO = require('../toDTO')
 const { success, internalError, badRequest, renameKeys } = require("../responseHandler")
 const {ACTIVITY_NAMES, ACCOUNT_TYPES } = require('../../constants')
 
@@ -49,29 +50,17 @@ const getSettingsPage = async (req, res) => {
     let username = req.username
 
     try {
-        const getDistanceResult   =   await db.call('call GET_DISTANCE(?)', [username]) 
-        const getActivitiesResult = await db.call('call GET_ACTIVITIES(?)', [username])
+        const distanceDb   =   await db.procedure('call GET_DISTANCE(?)', [username])
+        const activitiesDb = await db.procedure('call GET_ACTIVITIES(?)', [username])
 
-        let distance = db.findResults(getDistanceResult).map(idx => {
-            return idx.Distance
-        })
+        let distance = toDTO.distance(distanceDb)
 
-        if (!distance.length) distance = 10
-        else distance = distance[0]
-
-        let activities = db.findResults(getActivitiesResult).map(a => {
-            return {
-                name: a.Activity.toLowerCase(),
-                skillLevel: a.SkillLevel.toLowerCase(),
-            }
-        })
+        if (!distance) distance = 10
 
         const response = {
             distance,
-            activities
+            activities: toDTO.activities(activitiesDb)
         }
-
-        console.log('building response', JSON.stringify((response)))
 
         success(res, response)
 

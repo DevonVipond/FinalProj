@@ -1,7 +1,11 @@
 
-const success = (res, body = {}) => {
-    console.log('success -> ', body)
-    res.status(200).json(body)
+const success = (res, body = null) => {
+    if (body) {
+        console.log('success -> ', JSON.stringify(body))
+        res.status(200).json(body)
+    } else {
+        res.status(200).send('')
+    }
 }
 
 const internalError = (res, errMessage = undefined) => {

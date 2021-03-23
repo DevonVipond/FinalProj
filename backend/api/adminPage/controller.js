@@ -1,38 +1,15 @@
 const db = require("../../db/index")
 const { badRequest, internalError, success } = require("../responseHandler")
-const makeReportsFromDb = require('./helpers')
+const toDTO = require('../toDTO')
 
 // Returns all reported users where ReportedUsers.adminId == null
 const getUncheckedReports = async (req, res) => {
 
     try {
-        const reportsDb = await db.call('call GET_UNCHECKED_REPORTS()', [])// returns {primaryKey, reportedUsername, timesReported, reporterComments }
-        let reports = db.findResults(reportsDb)
+        const reportedUsersDb = await db.procedure('call GET_UNCHECKED_REPORTS()', [])// returns {primaryKey, reportedUsername, timesReported, reporterComments }
+        const reportedUsers = toDTO.reportedUsers(reportedUsersDb)
 
-        if (!reports) {
-            console.log('adminPageController -> getUncheckedReports -> no unchecked reports at this time!')
-            success(res, {})
-            return
-        }
-
-        //export type ReportedUser = {
-        //    username: string,
-        //    reporterComments: string
-        //    timesReported: string,
-        //    primaryKey: string
-        //}
-
-        let response = reports.map(r => {
-            return {
-                //username: string,
-                //reporterComments: string
-                //timesReported: string,
-                //primaryKey: r.reportedID
-
-            }
-        })
-
-        success(res, response)
+        success(res, reportedUsers)
 
     } catch (e) {
 
@@ -53,7 +30,9 @@ const resolveReport = async (req, res) => {
 
     try {
 
-        const success = await db.call('RESOLVE REPORT', [adminUsername, reportRowPrimaryKey, adminComments])
+        const successDb = await db.procedure('RESOLVE REPORT', [adminUsername, reportRowPrimaryKey, adminComments])
+        const success = toDTO.wasSuccessful(successDb)
+
         if (!success) {
             badRequest(res, "Report does not exist!")
             return
@@ -80,7 +59,8 @@ const deleteUser = async (req, res) => {
     }
 
     try {
-        const success = await db.call('DELETE USER', [adminUsername, usernameOfUserToDelete, reportRowPrimaryKey])
+        const successDb = await db.procedure('DELETE USER', [adminUsername, usernameOfUserToDelete, reportRowPrimaryKey])
+        const success = toDTO.wasSuccessful(successDb)
 
         if (!success) {
             badRequest(res, "User has never been reported!")

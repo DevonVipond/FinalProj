@@ -2,6 +2,7 @@ const db = require(".././../db/index")
 const { success, internalError, badRequest } = require("../responseHandler")
 const { setLoginCookies, setLogoutCookies} = require('../../middlewares/auth')
 const { createTokens } = require('./helpers')
+const toDTO = require('../toDTO')
 
 const userLogin = async (req, res) => {
 
@@ -90,11 +91,16 @@ const register = async (req, res) => {
         const { username, password, gender, firstName, lastName,
                 phoneNumber, age, about, accountType, longitude, latitude} = req.body
 
+        if ( !username || !password || !gender || !firstName || !lastName||
+             !phoneNumber || !age || !about || !accountType || !longitude || !latitude ) {
+            badRequest(res, "Missing parameters!")
+            return
+        }
 
-        const is_successful = await db.call('call createUser(?,?,?,?,?,?,?,?,?)', [username, password, accountType, gender, firstName, lastName, phoneNumber, age, about] ) 
 
-        if (!is_successful) {
-            badRequest(res, 'Failed to register user!')
+        let is_successful = await db.call('call createUser(?,?,?,?,?,?,?,?,?)', [username, password, accountType, gender, firstName, lastName, phoneNumber, age, about] )
+        if (is_successful[0]['@res']  != 1) {
+            badRequest(res, "Failed to register user!")
             return
         }
 
@@ -118,10 +124,10 @@ const getAccountType = async (req, res) => {
 
         const username = req.username
 
-        const accountType  = await db.call('call getUserType', [username] ) 
-        const accountTypeJSON = makeAccountTypeFromDb(accountType)
+        const accountTypeDb  = await db.call('call getUserType', [username] )
+        const accountType = toDTO.accountType(accountTypeDb)
 
-        success(res, {accountType: accountTypeJSON})
+        success(res, {accountType})
 
     } catch (e) {
 

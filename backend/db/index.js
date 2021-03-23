@@ -7,41 +7,6 @@ function Database() {
     }
 }
 
-const normalize = (rows) => {
-
-    return rows.map((obj, index) => {
-        return Object.assign({}, obj)
-    })
-
-}
-
-//Database.prototype.call = async (procedure_name, arguments) => {
-//    try {
-//
-//        let procedure = `${procedure_name}(`
-//
-//        if (arguments.length === 0) procedure = procedure + `)`
-//
-//        Object.keys(arguments).forEach((value, index, array) => {
-//            procedure = procedure + `?,`
-//        })
-//
-//        procedure = procedure + '@res); select @res;'
-//
-//        console.log('Database -> calling procedure: ', procedure)
-//
-//        const result = await db.query(procedure, arguments);
-//
-//        return result[1][0]['@res']
-//
-//    } catch(e) {
-//
-//        console.error("Database::call -> Exception: " + e)
-//        throw e
-//
-//    }
-//}
-
 Database.prototype.call = async (procedure_name, arguments) => {
     try {
 
@@ -72,6 +37,37 @@ Database.prototype.call = async (procedure_name, arguments) => {
     }
 }
 
+Database.prototype.procedure = async (procedure_name, arguments) => {
+    try {
+
+        console.log('Database -> calling ', procedure_name)
+
+        let prefix = '!';
+        const query = new Promise((resolve, reject) => {
+            db.query(procedure_name, arguments, function(e, result) {
+                if(e) {
+                    console.log(e)
+                    reject(e)
+                }
+
+                resolve(result);
+            });
+        });
+
+        const ret = await query;
+
+        const filteredResults =  Object.values(JSON.parse(JSON.stringify(findRowDataPackets(ret))))
+        console.log('Database -> procedure -> ' + JSON.stringify(filteredResults))
+        return filteredResults
+
+    } catch(e) {
+
+        console.error("Database::call -> Exception: " + e)
+        throw e
+
+    }
+}
+
 function findRowDataPackets(ds) {
     let results = []
     for (const idx in ds) {
@@ -91,42 +87,7 @@ function findRowDataPackets(ds) {
     return results
 }
 
-//function recursiveFindKey (keyToFind, dataStructure) {
-//
-//    if (!keyToFind || !dataStructure) return null
-//
-//    for (const key in dataStructure) {
-//
-//        const value = dataStructure[key]
-//
-//        if (key == keyToFind) {
-//
-//            return value
-//
-//        } else if (Array.isArray(value)) {
-//
-//            const res = recursiveFindKey(keyToFind, value);
-//
-//            if(res) return res
-//
-//        } else if (typeof dataStructure[key] === 'object' && !Array.isArray(value)) {
-//
-//            const res = recursiveFindKey(keyToFind, value);
-//
-//            if(res) return res
-//
-//        }  else {
-//
-//            console.log('findKey -> processing unknown key: ', key)
-//
-//        }
-//    }
-//
-//    return null;
-//
-//}
-
-Database.prototype.findResults = (ds, keyToFind=null) =>  {
+Database.prototype.findResults = (ds) =>  {
     return Object.values(JSON.parse(JSON.stringify(findRowDataPackets(ds))))
 }
 

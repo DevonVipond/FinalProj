@@ -1,26 +1,24 @@
-import { badRequest, internalError, success } from "../responseHandler"
-
+const { badRequest, internalError, success } = require("../responseHandler")
+const toDTO = require('../toDTO')
 const db = require('../../db/index')
 
 const getHome = async (req, res) => {
     try {
         const { username } = req.username
 
-        const friends = await db.call('GET FRIENDS FOR USER', [username]) 
-        const matches = await db.call('GET MATCHES FOR USER', [username]) 
-        const incomingFriendRequests = await db.call('GET INCOMING FRIEND REQUESTS FOR USER', [username]) 
+        const friendsDb = await db.procedure('GET FRIENDS FOR USER', [username])
+        const friends = toDTO.friends(friendsDb)
 
-        const friendsJSON = makeFriendsFromDb(friends)
-        const matchesJSON = makeMatchesFromDb(matches)
-        const incomingFriendRequestsJSON = makeIncomingFriendRequestsFromDb(incomingFriendRequests)
+        let matchesDb = await db.procedure('GET MATCHES FOR USER', [username])
+        let matches = toDTO.matches(matchesDb)
 
-        const responseBody = {
-            friends: friendsJSON,
-            matches: matchesJSON,
-            incomingFriendRequests: incomingFriendRequestsJSON,
-        }
+        let incomingFriendRequestsDb = await db.procedure('GET INCOMING FRIEND REQUESTS FOR USER', [username])
+        let incomingFriendRequests = toDTO.friendRequests(incomingFriendRequestsDb)
 
-        success(res, responseBody)
+        const response = { friends, matches, incomingFriendRequests }
+
+        success(res, response)
+
     } catch (e) {
         internalError(res, e.toString())
     }
@@ -38,10 +36,11 @@ const connectWithMatch = async (req, res) => {
 
     try {
 
-        const success = await db.call('CONNECT WITH MATCH', [username, recipientUsername, message])
+        const successDb = await db.procedure('CONNECT WITH MATCH', [username, recipientUsername, message])
+        const success = toDTO.wasSuccessful(successDb)
 
         if (!success) {
-            badRequest('Unable to connect to match!')
+            badRequest(res, 'Unable to connect to match!')
             return
         }
 
@@ -60,16 +59,18 @@ const reportFriend = async (req, res) => {
     const { username } = req.username
     const { reportedFriendUsername, message } = req.body
 
-    if (!reportedFriendUsername, !message) {
+    if (!reportedFriendUsername || !message) {
         badRequest(res, 'username of reported friend required')
         return
     }
 
     try {
 
-        const success = await db.call('REPORT FRIEND', [username, reportedFriendUsername, message]) // NOTE: This will delete the friendship!
+        const successDb = await db.procedure('REPORT FRIEND', [username, reportedFriendUsername, message]) // NOTE: This will delete the friendship!
+        const success = toDTO.wasSuccessful(successDb)
+
         if (!success) {
-            badRequest('Unable to connect to match!')
+            badRequest(res, 'Unable to report friend!')
             return
         }
 
@@ -94,7 +95,8 @@ const acceptFriendRequest = async (req, res) => {
 
     try {
 
-        const success = await db.call('ACCEPT FRIEND REQUEST', [username, requestorUsername, message] )
+        const successDb = await db.procedure('ACCEPT FRIEND REQUEST', [username, requestorUsername, message] )
+        const success = toDTO.wasSuccessful(successDb)
 
         if (!success) {
             badRequest(`Friend Request With User ${requestorUsername} does not exist!`)
@@ -122,10 +124,11 @@ const rejectFriendRequest = async (req, res) => {
 
     try {
 
-        const success = await db.call('REJECT FRIEND REQUEST', [username, requestorUsername])
+        const successDb = await db.procedure('REJECT FRIEND REQUEST', [username, requestorUsername])
+        const success = toDTO.wasSuccessful(successDb)
 
         if (!success) {
-            badRequest(`Friend Request With User ${requestorUsername} does not exist!`)
+            badRequest(res, `Friend Request With User ${requestorUsername} does not exist!`)
             return
         }
 
@@ -142,17 +145,18 @@ const reviewFriend = async (req, res) => {
     const { username } = req.username
     const { friendUsername, message } = req.body
 
-    if (!friendUsername, message) {
+    if (!friendUsername || message) {
         badRequest(res, 'username of friend required!')
         return
     }
 
     try {
 
-        const success = await db.call('REVIEW FRIEND', [username, friendUsername, message])
+        const successDb = await db.procedure('REVIEW FRIEND', [username, friendUsername, message])
+        const success = toDTO.wasSuccessful(successDb)
 
         if (!success) {
-            badRequest(`Friend Review With User ${friendUsername} does not exist!`)
+            badRequest(res, `Friend Review With User ${friendUsername} does not exist!`)
             return
         }
 
@@ -166,6 +170,4 @@ const reviewFriend = async (req, res) => {
 
 }
 
-module.exports = {
-    getHome, acceptFriendRequest, connectWithMatch, rejectFriendRequest, reportFriend
-}
+module.exports = { getHome, acceptFriendRequest, connectWithMatch, rejectFriendRequest, reportFriend, reviewFriend }

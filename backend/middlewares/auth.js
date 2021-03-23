@@ -3,7 +3,7 @@ const { unauthorized } = require('../api/responseHandler')
 
 const verify = async(req, res, next) => {
     // TODO: REMOVE
-    req.username = 'putin'
+    req.username = 'adolf'
     next()
     return
 

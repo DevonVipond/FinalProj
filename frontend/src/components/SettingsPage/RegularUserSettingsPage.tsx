@@ -1,9 +1,9 @@
 import './SettingsPage.css'
-import { Select } from 'semantic-ui-react'
 import React from 'react'
+import { Dropdown } from "semantic-ui-react";
 import { GetSettings, GetSettingsT } from '../../UseCases/GetSettings/GetSettings';
 import { Activity } from '../../Models/Activity';
-import { AddActivity } from '../../UseCases/AddActivity/AddActivity';
+import {SetSettings} from "../../UseCases/SetSettings/SetSettings";
 
 type State = {
     loading: boolean,
@@ -40,23 +40,11 @@ const RegularUserSettingsPage = () => {
     }
 
     const save = () => {
-        const activitySelector = document.getElementById('activitySelector')
-        const skillSelector = document.getElementById('skillSelector')
-
-        if (activitySelector && skillSelector) {
-            const name: any = activitySelector.textContent
-            const skillLevel: any = skillSelector.textContent
-
-            if (name && skillLevel) {
-                const activity = new Activity({name, skillLevel})
-
-                AddActivity(activity)
-                    .then((e: any) => {
-                        reloadPage()
-                    })
-                    .catch((e: any) => {console.log("E RegularUserSettingsPage-> " + e)})
-                }
-            }
+        SetSettings([new Activity({name: selectedActivity, skillLevel: selectedSkillLevel})])
+            .then((e: any) => {
+                reloadPage()
+            })
+            .catch((e: any) => {console.log("E RegularUserSettingsPage-> " + e)})
     }
 
 
@@ -65,18 +53,22 @@ const RegularUserSettingsPage = () => {
     }, [])
 
     const {distance, activities}: any = state
-    let selectedActivity:string = Activity.ActivityNames.SOCCER
-    let selectedSkillLevel:string = Activity.SkillLevel.BEGINNER
+    let selectedActivity: string = Activity.ActivityNames.SOCCER
+    let selectedSkillLevel: string = Activity.SkillLevel.BEGINNER
 
-    if (activities) {
-        selectedActivity = activities[0].name()
-        selectedSkillLevel = activities[0].skillLevel()
+    let defaultActivity: any = activityOptions[0]
+    let defaultSkill: any = skillLevelOptions[0]
+    if (activities && activities.length) {
+        defaultActivity =  activityOptions.find((f: {key: number, value: string, text: string}) => {return f.text.toLowerCase() === activities[0].name().toLowerCase()})
+        defaultSkill = skillLevelOptions.find((f: {key: number, value: string, text: string}) => {return f.text.toLowerCase() === activities[0].skillLevel().toLowerCase()})
     }
 
     return (
         <div className='settingsContainer'>
-            <Select id="activitySelector" onChange={(e: any) => console.log(e)} defaultValue={selectedActivity} placeholder='Activity' options={activityOptions} />
-            <Select id="skillSelector" onChange={(e: any) => console.log(e)} defaultValue={selectedSkillLevel} placeholder='Skill Level' options={skillLevelOptions} />
+            <p>Current Activity: {defaultActivity.text}</p>
+            <p>Current Skill Level: {defaultSkill.text}</p>
+            <Dropdown id={'activityDropdown'} onChange={(e: any, data: any) => {selectedActivity = e.target.textContent;}} clearable options={activityOptions} selection />
+            <Dropdown id={'skillLevelDropdown'} onChange={(e: any, data: any) => {selectedSkillLevel = e.target.textContent;}} clearable options={skillLevelOptions} selection />
             <h3>{ distance }</h3>
             <div className="ui bottom attached button" onClick={(e: any) => save()} id="addButton" >
                 <i className="add icon" ></i>

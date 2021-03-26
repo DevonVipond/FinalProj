@@ -1,9 +1,6 @@
-import SettingsPage from './SettingsPage'
-import PageWrapper from "../Shared/PageWrapper/PageWrapper";
 import React from "react";
-import { GetActivies } from '../../UseCases/GetActivity/GetActivity';
-import { AddActivity } from '../../UseCases/AddActivity/AddActivity';
-import { RemoveActivity } from '../../UseCases/RemoveActivity/RemoveActivity';
+import PremiumUserSettingsPage from './PremiumUserSettingsPage'
+import PageWrapper from "../Shared/PageWrapper/PageWrapper";
 import authService from '../../UseCases/AuthService';
 import RegularUserSettingsPage from './RegularUserSettingsPage';
 
@@ -14,17 +11,14 @@ class SettingsPageContainer extends React.Component<any, any>{
 
     render() {
         authService.setAuth('REGULAR')
-        const accountType: any = authService.getAuth()
+        let accountType: any = authService.getAuth()
         if (accountType === null) return <h3>Failed to find account type!</h3>
+        accountType = "PREMIUM"
         switch (accountType.toUpperCase()) {
             case "REGULAR":
                 return <RegularUserSettingsPage />
             case "PREMIUM":
-                return <SettingsPage 
-                            getActivities={GetActivies}
-                            removeActivity={RemoveActivity}
-                            addActivity={AddActivity} 
-                    />;
+                return <PremiumUserSettingsPage />;
             case "ADMIN":
                 break;
 

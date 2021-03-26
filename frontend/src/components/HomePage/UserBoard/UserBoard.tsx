@@ -1,11 +1,10 @@
 import React, {useEffect} from "react";
-import List from './Components/LIst/ListContainer'
-import {Match} from "../../../../Models/Match";
-import { FriendItem, MatchItem, FriendRequestItem, ReportedUserItem } from "./Components/LIst/Components/Item/Item";
-import {Friend} from "../../../../Models/Friend";
-import { FriendRequest } from "../../../../Models/FriendRequest";
-import { ReportedUser } from "../../../../Models/ReportedUser";
-import authService from "../../../../UseCases/AuthService";
+import List from '../List/List'
+import {Match} from "../../../Models/Match";
+import { FriendItem, MatchItem, FriendRequestItem, ReportedUserItem } from "../List/Components/Item/Item";
+import {Friend} from "../../../Models/Friend";
+import { FriendRequest } from "../../../Models/FriendRequest";
+import "./Board.css"
 
 const createFriendList = (title: string, users: Array<Friend>, reloadBoard: Function) => {
     return (
@@ -41,14 +40,14 @@ type BoardProps = {
     reloadBoard: Function,
 }
 
-const Board = ({ friendRequests, friends, matches, reloadBoard }: BoardProps) => {
+const UserBoard = ({ friendRequests, friends, matches, reloadBoard }: BoardProps) => {
     return (
         <div id='board'>
             { createMatchesList('Matches', matches, reloadBoard) }
             { createFriendList('Friends', friends, reloadBoard) }
-            { createFriendRequestList('Friend Requests', friendRequests, reloadBoard) }
+            { createFriendRequestList('Incoming Friend Requests', friendRequests, reloadBoard) }
         </div>
     )
 }
 
-export default Board
+export default UserBoard

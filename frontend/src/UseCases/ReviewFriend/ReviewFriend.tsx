@@ -1,13 +1,13 @@
 import { api } from "../../Api/Api"
 import { Friend } from "../../Models/Friend"
 
-export async function ReviewFriend(friend: Friend, message: string): Promise<void> {
+export async function ReviewFriend(friend: Friend, rating: string): Promise<void> {
 
     try {
 
         const body = {
             friendUsername: friend.username(),
-            message
+            rating
         }
 
         await api.post(`/friends/review`, body)

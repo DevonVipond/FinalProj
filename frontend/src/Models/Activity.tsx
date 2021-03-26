@@ -17,6 +17,13 @@ const __validate = (name: string, skillLevel: string) => {
 type props = { name: string, skillLevel: string }
 
 export class Activity {
+
+    public static createFromJSON(json: any): Array<Activity> {
+        return json['activities'].map((activity: {name: string, skillLevel: string}) => {
+            return new Activity(activity)
+        })
+    }
+
     public static ActivityNames: Record<string, string> = {
         SOCCER: 'soccer',
         BASKETBALL: 'basketball',

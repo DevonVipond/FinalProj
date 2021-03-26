@@ -9,7 +9,7 @@ const setSettings = async (req, res) => {
     const { activities, distance } = req.body
 
     if (!activities) {
-        badRequest(res, 'activities required')
+        badRequest(res, 'activities required' + JSON.stringify(req.body))
     }
 
     try {
@@ -20,15 +20,15 @@ const setSettings = async (req, res) => {
         //    return
         //}
 
-        Object.values(ACTIVITY_NAMES).forEach( async (activityName) => {
+        Object.values(ACTIVITY_NAMES).forEach( async (name) => {
             try {
-                await db.exec('call REMOVE_ACTIVITY(?,?)', [username, activityName.toLowerCase()])
+                await db.exec('call REMOVE_ACTIVITY(?,?)', [username, name.toLowerCase()])
             } catch (e) {}
         })
 
         activities.forEach( async (value) => {
-            const { activityName, skillLevel } = value
-            await db.exec('call ADD_ACTIVITY(?,?,?)', [username, activityName.toLowerCase(), skillLevel.toLowerCase()])
+            const { name, skillLevel } = value
+            await db.exec('call ADD_ACTIVITY(?,?,?)', [username, name.toLowerCase(), skillLevel.toLowerCase()])
         })
 
         if (distance)

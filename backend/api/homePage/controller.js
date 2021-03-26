@@ -37,9 +37,9 @@ const connectWithMatch = async (req, res) => {
     try {
 
         const successDb = await db.exec('CONNECT WITH MATCH', [username, recipientUsername, message])
-        const success = successDb.affectedRows > 0
+        const procedureSucceeded = successDb.affectedRows > 0
 
-        if (!success) {
+        if (!procedureSucceeded) {
             badRequest(res, 'Unable to connect to match!')
             return
         }
@@ -67,9 +67,9 @@ const reportFriend = async (req, res) => {
     try {
 
         const successDb = await db.exec('REPORT FRIEND', [username, reportedFriendUsername, message]) // NOTE: This will delete the friendship!
-        const success = successDb.affectedRows > 0
+        const procedureSucceededDb = successDb.affectedRows > 0
 
-        if (!success) {
+        if (!procedureSucceededDb) {
             badRequest(res, 'Unable to report friend!')
             return
         }
@@ -85,6 +85,7 @@ const reportFriend = async (req, res) => {
 }
 
 const acceptFriendRequest = async (req, res) => {
+
     const { username } = req.username
     const { requestorUsername, message } = req.body
 
@@ -96,9 +97,9 @@ const acceptFriendRequest = async (req, res) => {
     try {
 
         const successDb = await db.exec('ACCEPT FRIEND REQUEST', [username, requestorUsername, message] )
-        const success = successDb.affectedRows > 0
+        const procedureSucceededDb = successDb.affectedRows > 0
 
-        if (!success) {
+        if (!procedureSucceededDb) {
             badRequest(`Friend Request With User ${requestorUsername} does not exist!`)
             return
         }
@@ -125,9 +126,9 @@ const rejectFriendRequest = async (req, res) => {
     try {
 
         const successDb = await db.exec('REJECT FRIEND REQUEST', [username, requestorUsername])
-        const success = successDb.affectedRows > 0
+        const procedureSucceededDb = successDb.affectedRows > 0
 
-        if (!success) {
+        if (!procedureSucceededDb) {
             badRequest(res, `Friend Request With User ${requestorUsername} does not exist!`)
             return
         }
@@ -141,21 +142,22 @@ const rejectFriendRequest = async (req, res) => {
     }
 
 }
-const reviewFriend = async (req, res) => { 
-    const { username } = req.username
-    const { friendUsername, message } = req.body
+const reviewFriend = async (req, res) => {
 
-    if (!friendUsername || message) {
+    const { username } = req.username
+    const { friendUsername, rating } = req.body
+
+    if (!friendUsername || !rating) {
         badRequest(res, 'username of friend required!')
         return
     }
 
     try {
 
-        const successDb = await db.exec('REVIEW FRIEND', [username, friendUsername, message])
-        const success = successDb.affectedRows > 0
+        const successDb = await db.exec('REVIEW FRIEND', [username, friendUsername, rating])
+        const procedureSucceeded = successDb.affectedRows > 0
 
-        if (!success) {
+        if (!procedureSucceeded) {
             badRequest(res, `Friend Review With User ${friendUsername} does not exist!`)
             return
         }

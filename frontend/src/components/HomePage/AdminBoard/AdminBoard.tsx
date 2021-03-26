@@ -1,6 +1,6 @@
-import List from './Components/LIst/ListContainer'
-import { ReportedUserItem } from "./Components/LIst/Components/Item/Item";
-import { ReportedUser } from "../../../../Models/ReportedUser";
+import List from '../List/List'
+import { ReportedUserItem } from "../List/Components/Item/Item";
+import { ReportedUser } from "../../../Models/ReportedUser";
 
 const createReportedUsersList = (title: string, users: Array<ReportedUser>, reloadBoard: Function) => {
     return (

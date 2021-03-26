@@ -1,21 +1,22 @@
 import React from "react"
 import './Item.css'
-import { Activity } from "../../../../../../../../Models/Activity";
+import { Activity } from "../../../../../Models/Activity";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBasketballBall, faFootballBall, faFutbol, faSkiing} from "@fortawesome/free-solid-svg-icons";
 import 'semantic-ui-css/semantic.min.css';
-import { Friend } from "../../../../../../../../Models/Friend";
-import { FriendRequest } from "../../../../../../../../Models/FriendRequest";
-import { Match } from "../../../../../../../../Models/Match";
-import { ConnectWithMatch } from "../../../../../../../../UseCases/ConnectWithMatch/ConnectWithMatch";
-import { AcceptFriendRequest } from "../../../../../../../../UseCases/AcceptFriendRequest/AcceptFriendRequest";
-import { RejectFriendRequest } from "../../../../../../../../UseCases/RejectFriendRequest/RejectFriendRequest";
-import { ReportFriend } from "../../../../../../../../UseCases/ReportFriend/ReportFriend";
+import { Friend } from "../../../../../Models/Friend";
+import { FriendRequest } from "../../../../../Models/FriendRequest";
+import { Match } from "../../../../../Models/Match";
+import { ConnectWithMatch } from "../../../../../UseCases/ConnectWithMatch/ConnectWithMatch";
+import { AcceptFriendRequest } from "../../../../../UseCases/AcceptFriendRequest/AcceptFriendRequest";
+import { RejectFriendRequest } from "../../../../../UseCases/RejectFriendRequest/RejectFriendRequest";
+import { ReportFriend } from "../../../../../UseCases/ReportFriend/ReportFriend";
 import ReportUserModal from "../ReportUserModal/ReportUserModal"
-import { ReportedUser } from "../../../../../../../../Models/ReportedUser";
-import { DeleteUser } from "../../../../../../../../UseCases/DeleteUser/DeleteUser";
-import { ResolveReport } from "../../../../../../../../UseCases/ResolveReport/ResolveReport";
-import { ReviewFriend } from "../../../../../../../../UseCases/ReviewFriend/ReviewFriend";
+import { ReportedUser } from "../../../../../Models/ReportedUser";
+import { DeleteUser } from "../../../../../UseCases/DeleteUser/DeleteUser";
+import { ResolveReport } from "../../../../../UseCases/ResolveReport/ResolveReport";
+import { ReviewFriend } from "../../../../../UseCases/ReviewFriend/ReviewFriend";
+import ReviewFriendModal from "../ReviewFriendModal/ReviewFriendModal";
 
 
 const skillLevelToColor = (skillLevel: string): string => {
@@ -74,7 +75,7 @@ export const FriendItem = ({ user, reloadBoard }: { user: Friend, reloadBoard: F
 
         if (htmlComponent)
             ReviewFriend(user, htmlComponent.value)
-                .then((res: any) => { setShowReportModal(false); reloadBoard();  })
+                .then((res: any) => { setShowReviewModal(false); reloadBoard();  })
                 .catch((err: any) => { logError(err); })
     }
 
@@ -97,7 +98,7 @@ export const FriendItem = ({ user, reloadBoard }: { user: Friend, reloadBoard: F
                     Report
                 </div>
                 <ReportUserModal reportFriend={reportFriend} show={showReportModal} onHide={() => setShowReportModal(false)}/>
-                <ReportUserModal reportFriend={reviewFriend} show={showReviewModal} onHide={() => setShowReviewModal(false)}/>
+                <ReviewFriendModal reviewFriend={reviewFriend} show={showReviewModal} onHide={() => setShowReviewModal(false)}/>
             </a>
         </div>
     )
@@ -144,6 +145,8 @@ export const ReportedUserItem  = ({ user , reloadBoard }: { user: ReportedUser, 
     const username = user.username
     const primaryKey = user.primaryKey
 
+    console.log(user)
+
     const deleteUser = (e: any) => {
         DeleteUser(username, primaryKey)
             .then((res: any) => { reloadBoard() })
@@ -169,8 +172,10 @@ export const ReportedUserItem  = ({ user , reloadBoard }: { user: ReportedUser, 
     return (
         <div className='itemContainer' >
             <a>
-                <p className='itemLabel' id='companyLabel'>{username}</p>
                 <div>
+                    <p style={{fontSize: '16px'}}> {user.username} </p>
+                    <p style={{fontSize: '16px'}}> Most recent reporter comment: {user.reporterComments} </p>
+                    <p style={{fontSize: '16px'}}> Times Reported: {user.timesReported} </p>
                 </div>
                 <div className="ui bottom attached button" onClick={(e: any)=> deleteUser(e)} id="addButton" >
                     <i className="add icon" ></i>

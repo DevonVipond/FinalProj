@@ -1,10 +1,10 @@
-import createModal from "../../../../../../../Shared/Modal/CreateModal"
+import createModal from "../../../../Shared/Modal/CreateModal"
 import 'semantic-ui-css/semantic.min.css';
 
 const ReportUserModal = ({ reportFriend, onHide }: {reportFriend: Function, onHide: any}) => {
-    const reportFriendAndClose = (e: any, reportUserInputId: string) => {
-        reportFriend(e, reportUserInputId)
-    }
+    //const reportFriendAndClose = (e: any, reportUserInputId: string) => {
+    //    reportFriend(e, reportUserInputId)
+    //}
 
     return (
         <div className='container' >

@@ -14,7 +14,6 @@ import {
 import "../../UseCases/Login/Login"
 import { LoginUser } from "../../UseCases/Login/Login"
 import { Register } from "../../UseCases/Register/Register";
-import { Redirect } from "react-router";
 
 const registrationFields = [
     ['username', 'usernameForm'],
@@ -146,9 +145,6 @@ const UILoginForm = (name: string) => {
 }
 
 const Login = () => {
-    //if (sessionStorage.getItem('auth')) {
-    //    return <Redirect to='/home' />
-    //}
     return (
         <div >
             { UILoginForm('Login User') }

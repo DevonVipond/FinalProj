@@ -26,7 +26,7 @@ const verify = async(req, res, next) => {
 
         console.log(err)
         
-        unauthorized(res, 'Unable to create access/refresh tokens!')
+        unauthorized(res, 'Unable to verify auth tokens!')
     }
 }
 
@@ -51,8 +51,8 @@ const setLoginCookies = (res, accessToken, refreshToken) => {
 const setLogoutCookies = (res) => {
     const accessToken = jwt.sign({id: 'logout'}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: 0})
     const refreshToken = jwt.sign({id: 'logout'}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: 0})
-    res.cookie('access-token', accessToken, {httpOnly: true, sameSite: 'lax', maxAge: 0})
-    res.cookie('refresh-token', refreshToken, {httpOnly: true, maxAge: 0})
+    res.cookie('access-token', accessToken, {httpOnly: false,  maxAge: 0})
+    res.cookie('refresh-token', refreshToken, {httpOnly: false, maxAge: 0})
 }
 
 module.exports = {verify, setLoginCookies, setLogoutCookies}

@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken')
 
 function createTokens (username) {
     try {
-        const accessToken = jwt.sign({id: username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: process.env.ACCESS_TOKEN_LIFE})
-        const refreshToken = jwt.sign({id: username}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: process.env.REFRESH_TOKEN_LIFE})
+        const accessToken = jwt.sign({id: username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: process.env.ACCESS_TOKEN_LIFE | 999999})
+        const refreshToken = jwt.sign({id: username}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: process.env.REFRESH_TOKEN_LIFE | 999999})
 
         return {accessToken, refreshToken}
     } catch (err) {

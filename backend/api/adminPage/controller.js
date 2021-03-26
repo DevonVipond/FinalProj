@@ -30,10 +30,10 @@ const resolveReport = async (req, res) => {
 
     try {
 
-        const successDb = await db.procedure('RESOLVE REPORT', [adminUsername, reportRowPrimaryKey, adminComments])
-        const success = toDTO.wasSuccessful(successDb)
+        const successDb = await db.exec('call RESOLVE_REPORT(?,?,?)', [adminUsername, reportRowPrimaryKey, adminComments])
+        const procedureSucceeded = toDTO.wasSuccessful(successDb)
 
-        if (!success) {
+        if (!procedureSucceeded) {
             badRequest(res, "Report does not exist!")
             return
         }
@@ -59,10 +59,10 @@ const deleteUser = async (req, res) => {
     }
 
     try {
-        const successDb = await db.procedure('DELETE USER', [adminUsername, usernameOfUserToDelete, reportRowPrimaryKey])
-        const success = toDTO.wasSuccessful(successDb)
+        const successDb = await db.exec('call DELETE_USER(?,?,?)', [adminUsername, usernameOfUserToDelete, reportRowPrimaryKey])
+        const procedureSucceeded = toDTO.wasSuccessful(successDb)
 
-        if (!success) {
+        if (!procedureSucceeded) {
             badRequest(res, "User has never been reported!")
             return
         }

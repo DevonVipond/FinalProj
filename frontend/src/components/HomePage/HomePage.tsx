@@ -1,10 +1,10 @@
 import React from 'react'
 import UserBoard from "./UserBoard/UserBoard"
-import { BoardT, GetBoard } from "../../UseCases/GetBoard/GetBoard"
 import { ReportedUser } from '../../Models/ReportedUser'
 import { GetReportedUsers } from '../../UseCases/GetReportedUsers/GetReportedUsers'
 import authService from '../../UseCases/AuthService'
 import AdminBoard from "./AdminBoard/AdminBoard"
+import {BoardT, GetHome} from "../../UseCases/GetHome/GetHome";
 
 type UserBoardState = {
     loading: boolean,
@@ -25,7 +25,7 @@ const PluginUserBoard = () => {
     })
 
     React.useEffect(() => {
-        GetBoard()
+        GetHome()
             .then((b: BoardT) => {
                 setState({startFetch: state.startFetch, loading: false, board: b})
             })
@@ -36,7 +36,7 @@ const PluginUserBoard = () => {
     }, [])
 
     const reloadBoard = () => {
-        GetBoard()
+        GetHome()
             .then((b: BoardT) => {
                 setState({startFetch: state.startFetch, loading: false, board: b})
             })

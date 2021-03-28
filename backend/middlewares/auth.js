@@ -2,10 +2,6 @@ const jwt = require('jsonwebtoken')
 const { unauthorized } = require('../api/responseHandler')
 
 const verify = async(req, res, next) => {
-    // TODO: REMOVE
-    req.username = 'adolf'
-    next()
-    return
 
     try {
         const accessToken = req.cookies['refresh-token']
@@ -19,6 +15,8 @@ const verify = async(req, res, next) => {
         if (!id) { throw new Error('No user!') }
 
         req.username = id
+
+        console.log('successfully authenticated user: ' + req.username)
 
         next()
 
@@ -44,8 +42,8 @@ const verify = async(req, res, next) => {
 
 
 const setLoginCookies = (res, accessToken, refreshToken) => {
-    res.cookie('access-token', accessToken, {httpOnly: false, maxAge: process.env.ACCESS_TOKEN_LIFE | 99000})
-    res.cookie('refresh-token', refreshToken, {httpOnly: false, maxAge: process.env.REFRESH_TOKEN_LIFE | 99000})
+    res.cookie('access-token', accessToken, {httpOnly: false, maxAge: process.env.ACCESS_TOKEN_LIFE | 9999000})
+    res.cookie('refresh-token', refreshToken, {httpOnly: false, maxAge: process.env.REFRESH_TOKEN_LIFE | 9999000})
 }
 
 const setLogoutCookies = (res) => {

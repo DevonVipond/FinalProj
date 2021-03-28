@@ -2,23 +2,32 @@ const db = require(".././../db/index")
 const toDTO = require('../toDTO')
 const { success, internalError, badRequest, renameKeys } = require("../responseHandler")
 const {ACTIVITY_NAMES, ACCOUNT_TYPES } = require('../../constants')
+const {validateType, TYPES} = require('../validators')
 
 const setSettings = async (req, res) => {
 
     const username  = req.username
     const { activities, distance } = req.body
 
-    if (!activities) {
-        badRequest(res, 'activities required' + JSON.stringify(req.body))
+    try {
+        validateType(activities, TYPES.OBJECT)
+    } catch (e) {
+        badRequest(res, 'activities required' + e.message)
+        return
     }
 
     try {
 
-        //const accountType  = await db.call('call getUserType', [username] )[0]
-        //if (accountType.toLowerCase() !== ACCOUNT_TYPES.PREMIUM && distance) {
-        //    badRequest(res, 'Only premium users can modify their distance!')
-        //    return
-        //}
+        const accountTypeDb  = await db.exec('call getUserType(?)', [username] )
+        const accountType = toDTO.accountType(accountTypeDb.data)
+        if (accountType.toLowerCase() !== ACCOUNT_TYPES.PREMIUM && distance) {
+            badRequest(res, 'Only premium users can modify their distance!')
+            return
+        }
+        if (accountType.toLowerCase() !== ACCOUNT_TYPES.PREMIUM && activities.length > 1) {
+            badRequest(res, 'Only premium users can set more than 1 activity')
+            return
+        }
 
         Object.values(ACTIVITY_NAMES).forEach( async (name) => {
             try {
@@ -28,7 +37,11 @@ const setSettings = async (req, res) => {
 
         activities.forEach( async (value) => {
             const { name, skillLevel } = value
-            await db.exec('call ADD_ACTIVITY(?,?,?)', [username, name.toLowerCase(), skillLevel.toLowerCase()])
+            try {
+                await db.exec('call ADD_ACTIVITY(?,?,?)', [username, name.toLowerCase(), skillLevel.toLowerCase()])
+            } catch (e) {
+                console.log('ADD_ACITVITY failed for ' + name + ' ' + skillLevel)
+            }
         })
 
         if (distance)

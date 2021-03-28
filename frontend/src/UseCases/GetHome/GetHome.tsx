@@ -13,7 +13,7 @@ export type BoardT = {
 export async function GetHome(): Promise<BoardT> {
     try {
 
-        const payload = await api.get('/home') 
+        const payload = await api.get('/user/home')
 
         const matches: Array<Match> =  payload['matches'].map( (match: any) => {
 

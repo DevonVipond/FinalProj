@@ -14,7 +14,7 @@ mysqlConnection.connect(function(err) {
   console.log("Connected to mysql database!");
 });
 
-//mysqlConnection.query('show tables',  function(err, result) {
+//mysqlConnection.query('select * from usertable',  function(err, result) {
 //  if (err) { console.log(err)}
 //  console.log(result)
 //  console.log(Object.values(JSON.parse(JSON.stringify(result))))
@@ -23,14 +23,6 @@ mysqlConnection.connect(function(err) {
 //mysqlConnection.query('show procedure status',  function(err, result) {
 //  if (err) { console.log(err)}
 //  console.log(result)
-//  //const parsedResult = Object.values(JSON.parse(JSON.stringify(result))).map (a => {
-//  //  return {
-//  //    type: a.UserType
-//  //  }
-//  //})
-//
-//  //console.log(parsedResult)
-//
 //})
 //mysqlConnection.query('call REMOVE_ACTIVITY(?,?)', ['putin', 'soccer' ],  function(err, rows) {
 //  if (err) { console.log(err)}

@@ -17,7 +17,7 @@ function convertTo1DArray(nestedArr) {
 Database.prototype.exec = async (procedure_name, arguments) => {
     try {
 
-        console.log('Database -> calling ', procedure_name)
+        console.log('Database -> calling ', procedure_name, ' ', arguments)
 
         const query = new Promise((resolve, reject) => {
             db.query(procedure_name, arguments, function(e, result) {

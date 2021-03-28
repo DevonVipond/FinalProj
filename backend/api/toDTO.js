@@ -1,7 +1,9 @@
+const {ACCOUNT_TYPES} = require('../constants')
+
 class toDTO {
 
     activities(activitiesDb) {
-        return activitiesDb.map(a => {
+        return activitiesDb.filter(a => (a.Activity)).map(a => {
             return {
                 name: a.Activity.toLowerCase(),
                 skillLevel: a.SkillLevel.toLowerCase(),
@@ -18,32 +20,60 @@ class toDTO {
         return distance[0]
     }
 
-    friends(friendsDb) {
-        return friendsDb.map(f => {
-            let { username, distance, activities } = f
-            activities = this.activities(activities)
+    location(locationDb) {
+        const location = locationDb.find(f => {
+            return f.Longitude && f.Latitude
+        })
 
-            return { username, distance, activities }
+        if (!location) throw Error(' Unable to parse location! ' + locationDb)
+
+        return {
+            longitude: location.Longitude,
+            latitude: location.Latitude,
+        }
+    }
+
+    users(usersDb) {
+        return usersDb.filter(u => {
+            return u.UserName !== null
+        }).map(u => {
+            const { UserName, Distance, Latitude, Longitude }  = u
+            return {
+                username: UserName,
+                distance: Distance,
+                latitude: Latitude,
+                longitude: Longitude,
+            }
+
         })
     }
 
-    friendRequests(friendRequestsDb) {
-        return friendRequestsDb.map(f => {
-            let { username, distance, activities } = f
-            activities = this.activities(activities)
+    //friends(friendsDb) {
+    //    return this.users(friendsDb).map(m => {
+    //        let { username, distance, activities } = m
+    //        activities = this.activities(activities)
 
-            return { username, distance, activities }
-        })
-    }
+    //        return { username, distance, activities }
+    //    })
+    //}
 
-    matches(matchesDb) {
-        return matchesDb.map(m => {
-            let { username, distance, activities } = m
-            activities = this.activities(activities)
+    //friendRequests(friendRequestsDb) {
+    //    return this.users(friendRequestsDb).map(f => {
+    //        let { username, distance, activities } = f
+    //        activities = this.activities(activities)
 
-            return { username, distance, activities }
-        })
-    }
+    //        return { username, distance, activities }
+    //    })
+    //}
+
+    //matches(matchesDb) {
+    //    return this.users(matchesDb).map(m => {
+    //        let { username, distance, activities } = m
+    //        activities = this.activities(activities)
+
+    //        return { username, distance, activities }
+    //    })
+    //}
 
     wasSuccessful(dbResult) {
         const filteredData = dbResult.filter(element => { return element['@res'] })
@@ -67,7 +97,7 @@ class toDTO {
             return !!e.UserType
         })
 
-        if (!element) throw Error ('Unable to parse accountType from ' + dbResult)
+        if (!element) return ACCOUNT_TYPES.ADMIN
         return element.UserType
     }
 

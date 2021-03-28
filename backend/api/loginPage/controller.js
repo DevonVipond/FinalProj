@@ -89,10 +89,10 @@ const register = async (req, res) => {
 
 
         let createUserResultDb = await db.exec('call createUser(?,?,?,?,?,?,?,?,?)', [username, password, accountType, gender, firstName, lastName, phoneNumber, age, about] )
-        if (!toDTO.wasSuccessful(createUserResultDb.data)) {
-            badRequest(res, "Failed to register user!")
-            return
-        }
+        //if (!toDTO.wasSuccessful(createUserResultDb.data)) {
+        //    badRequest(res, "Failed to register user!")
+        //    return
+        //}
 
         const resultDb = await db.exec('call addUserLocations(?,?,?)', [username, latitude, longitude]) // ENSURE THERE ARE NO MORE THAN 10 ENTRIES!!!
         if (resultDb.affectedRows <= 0) {

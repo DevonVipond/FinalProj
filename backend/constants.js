@@ -7,7 +7,8 @@ const ACTIVITY_NAMES = {
 
 const ACCOUNT_TYPES = {
     PREMIUM: 'premium',
-    REGULAR: 'regular'
+    REGULAR: 'regular',
+    ADMIN: 'admin',
 }
 
 module.exports = { ACTIVITY_NAMES, ACCOUNT_TYPES }

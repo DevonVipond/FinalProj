@@ -12,10 +12,9 @@ import {
 } from "semantic-ui-react";
 
 import "../../UseCases/Login/Login"
-import { LoginUser } from "../../UseCases/Login/Login"
+import { LoginUser, LoginAdmin } from "../../UseCases/Login/Login"
 import { Register } from "../../UseCases/Register/Register";
 import authService from "../../UseCases/AuthService";
-import Logout from "../../UseCases/Logout/Logout";
 import {Redirect} from "react-router-dom";
 
 const registrationFields = [
@@ -38,6 +37,20 @@ const login = (uId: string, pId: string, reloadPage: Function) => {
     const pForm: any = document.getElementById(pId)
 
     LoginUser(uForm.value, pForm.value)
+        .then((r: any) => {
+            reloadPage()
+        })
+        .catch((e: any) => {
+            alert('Login Failed!')
+        })
+}
+
+const loginAdmin = (uId: string, pId: string, reloadPage: Function) => {
+
+    const uForm: any = document.getElementById(uId)
+    const pForm: any = document.getElementById(pId)
+
+    LoginAdmin(uForm.value, pForm.value)
         .then((r: any) => {
             reloadPage()
         })
@@ -123,7 +136,7 @@ const accountTypes = [
 ]
 
 
-const UILoginForm = (name: string, reloadPage: Function) => {
+const UILoginForm = (name: string, reloadPage: Function, adminLogin: boolean = false) => {
     const uId: string = 'loginForm' + (++uniqueId).toString()
     const pId: string = 'loginForm' + (++uniqueId).toString()
 
@@ -145,9 +158,13 @@ const UILoginForm = (name: string, reloadPage: Function) => {
                                 iconPosition="left"
                                 placeholder='password'
                             />
+                            {adminLogin? (
+                                <Button color="teal" fluid size="large" onClick={(e: any) => loginAdmin(uId, pId, reloadPage)}>
+                                    { name }
+                                </Button>) :  (
                             <Button color="teal" fluid size="large" onClick={(e: any) => login(uId, pId, reloadPage)}>
                                 { name }
-                            </Button>
+                            </Button> )}
                         </Segment>
                     </Form>
                 </Grid.Column>
@@ -171,13 +188,11 @@ const Login = () => {
 
     if (authService.isAuthenticated()) {
         return <Redirect to='/home' />
-        //Logout()
-        //    .catch((e: any) => {console.log('Failed to logout!' + e.message)})
     }
     return (
         <div >
             { UILoginForm('Login User', reloadPage) }
-            { UILoginForm('Login Admin', reloadPage) }
+            { UILoginForm('Login Admin', reloadPage, true) }
             { UIRegisterForm('Register User', reloadPage) }
         </div>
     )

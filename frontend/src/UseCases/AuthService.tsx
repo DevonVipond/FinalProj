@@ -4,6 +4,14 @@ class AuthService {
         sessionStorage.setItem('auth', accountType)
     }
 
+    setUsername(username: string): void {
+        sessionStorage.setItem('username', username)
+    }
+
+    getUsername(): string | null {
+        return sessionStorage.getItem('username')
+    }
+
     removeAuth(): void {
         sessionStorage.removeItem('auth')
     }

@@ -5,7 +5,7 @@ export async function GetReportedUsers(): Promise<Array<ReportedUser>> {
 
     try {
 
-        const reports: Array<ReportedUser>  = await api.get('/reports')
+        const reports: Array<ReportedUser>  = await api.get('/admin/home')
 
         return Promise.resolve(reports)
 

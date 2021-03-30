@@ -19,9 +19,6 @@ export async function GetSettings(): Promise<GetSettingsT> {
 
         const distance = payload['distance']
 
-        console.log('findme', activities)
-
-
         return Promise.resolve({ distance, activities})
 
     } catch (e) {

@@ -84,7 +84,6 @@ class toDTO {
     }
 
     reportedUsers(reportedUsersDb) {
-        //[{"ReportedID":1,"RportedDate":"0000-00-00 00:00:00","UserComments":0,"AdminID":null,"AdminComments":"4"},{"ReportedID":2,"RportedDate":"0000-00-00 00:00:00","UserComments":1,"AdminID":null,"AdminComments":null},{"ReportedID":3,"RportedDate":"0000-00-00 00:00:00","UserComments":1,"AdminID":null,"AdminComments":null}]
         return reportedUsersDb.map(r => {
             const { username, UserComments, timesReported, ReportedID } = r
             return { username, reporterComments: UserComments, timesReported, primaryKey: ReportedID }
@@ -92,7 +91,6 @@ class toDTO {
     }
 
     accountType(dbResult) {
-        //Database -> exec -> [{"UserType":"Regular"},{"UserType":"Regular"},{"UserType":"Regular"},{"UserType":"Premium"},{"UserType":"Premium"},{"UserType":"Premium"},{"UserType":"Freemium"},{"UserType":"Freeloader"},{"UserType":"Freeloader"},{"fieldCount":0,"affectedRows":0,"insertId":0,"serverStatus":34,"warningCount":0,"message":"","protocol41":true,"changedRows":0}]
         const element =  dbResult.find(e => {
             return !!e.UserType
         })

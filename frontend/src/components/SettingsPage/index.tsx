@@ -10,7 +10,6 @@ class SettingsPageContainer extends React.Component<any, any>{
     }
 
     render() {
-        authService.setAuth('REGULAR')
         let accountType: any = authService.getAuth()
         if (accountType === null) return <h3>Failed to find account type!</h3>
         switch (accountType.toUpperCase()) {

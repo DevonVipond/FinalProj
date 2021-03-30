@@ -1,5 +1,6 @@
 import { Router, Route, Switch, Redirect } from "react-router-dom"
 import ProtectedRoute from "./Routes/ProtectedRoute";
+import UserProtectedRoute from "./Routes/UserProtectedRoute";
 import HomePage from "../components/HomePage/HomePageContainer";
 import SettingsPage from "../components/SettingsPage/index";
 import Login from "../components/LoginPage/LoginPageContainer";
@@ -12,7 +13,7 @@ const AppRouter = () => {
         <Router history={history}>
             <Switch>
                 <ProtectedRoute key={1} path='/home' DesiredPage={HomePage}/>
-                <ProtectedRoute key={1} path='/settings' DesiredPage={SettingsPage}/>
+                <UserProtectedRoute key={1} path='/settings' DesiredPage={SettingsPage}/>
                 <Route key={1} path='/login' component={Login}/>
             </Switch>
         </Router>

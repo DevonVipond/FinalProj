@@ -16,6 +16,32 @@ const logout = () => {
 
 export default class CustomNavbar extends Component {
     render() {
+        if (!authService.isAuthenticated()) {
+            return (
+                <Navbar bg="light" expand="lg">
+                    <Navbar.Brand href="/login">Ægir</Navbar.Brand>
+                </Navbar>
+            )
+        }
+
+        if (authService.getAuth()?.toUpperCase() === 'ADMIN') {
+            return (
+                <Navbar bg="light" expand="lg">
+                    <Navbar.Brand href="/home">Ægir</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="mr-auto">
+                            <Button  variant='light' onClick={(event: any) => {
+                                authService.removeAuth()
+                                window.location.href='/login'
+                            }}>Sign Out</Button>
+                        </Nav>
+                        <Navbar.Brand href="/home">Welcome {authService.getUsername()}</Navbar.Brand>
+                    </Navbar.Collapse>
+                </Navbar>
+            )
+        }
+
         return (
             <Navbar bg="light" expand="lg">
                 <Navbar.Brand href="/home">Ægir</Navbar.Brand>
@@ -28,6 +54,7 @@ export default class CustomNavbar extends Component {
                         window.location.href='/login'
                     }}>Sign Out</Button>
                 </Nav>
+                <Navbar.Brand href="/home">Welcome {authService.getUsername()}</Navbar.Brand>
             </Navbar.Collapse>
             </Navbar>
         )

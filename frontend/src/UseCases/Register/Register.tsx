@@ -31,6 +31,7 @@ export async function Register(username: string, password: string,
         await api.post(`/user/register`, body)
 
         authService.setAuth(accountType)
+        authService.setUsername(username)
 
     } catch (e) {
 

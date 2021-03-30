@@ -11,9 +11,10 @@ export async function LoginUser(username: string, password: string): Promise<voi
 
         await api.post(`/user/login`, body)
 
-        const accountType: string = await api.get(`/user/account-type`)
+        const { accountType }: any = await api.get(`/user/account-type`)
 
         authService.setAuth(accountType)
+        authService.setUsername(username)
 
 
     } catch (e) {
@@ -38,6 +39,7 @@ export async function LoginAdmin(username: string, password: string): Promise<vo
         await api.post(`/admin/login`, body)
 
         authService.setAuth('Admin')
+        authService.setUsername(username)
 
 
     } catch (e) {

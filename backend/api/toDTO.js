@@ -85,8 +85,8 @@ class toDTO {
 
     reportedUsers(reportedUsersDb) {
         return reportedUsersDb.map(r => {
-            const { username, UserComments, timesReported, ReportedID } = r
-            return { username, reporterComments: UserComments, timesReported, primaryKey: ReportedID }
+            const { username, UserComments, timesReported, ReportedID, TimesReported } = r
+            return { username, reporterComments: UserComments, timesReported: TimesReported, primaryKey: ReportedID }
         })
     }
 

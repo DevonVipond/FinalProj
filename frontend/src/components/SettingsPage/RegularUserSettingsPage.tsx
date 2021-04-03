@@ -43,6 +43,7 @@ const RegularUserSettingsPage = () => {
         SetSettings([new Activity({name: selectedActivity, skillLevel: selectedSkillLevel})])
             .then((e: any) => {
                 reloadPage()
+                alert("Successfully set settings!")
             })
             .catch((e: any) => {console.log("E RegularUserSettingsPage-> " + e)})
     }

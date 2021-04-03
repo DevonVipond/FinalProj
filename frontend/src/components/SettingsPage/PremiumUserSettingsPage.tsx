@@ -48,6 +48,7 @@ const PremiumUserSettingsPage = () => {
         SetSettings(activities, distance.value)
             .then((e: any) => {
                 reloadPage()
+                alert("Successfully set settings!")
             })
             .catch((e: any) => {console.log("E RegularUserSettingsPage-> " + e)})
     }

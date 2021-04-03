@@ -4,8 +4,8 @@ import {AuthenticatedUser} from "./Interfaces/AuthenticatedUser";
 
 export class PremiumUser extends AuthenticatedUser {
 
-    constructor({username, distance, activities}: UserProps) {
-        super({username, distance, activities});
+    constructor({username, distance, activities, averageReviewScore}: UserProps) {
+        super({username, distance, activities, averageReviewScore});
     }
 
     public addActivity(activity: Activity): void {

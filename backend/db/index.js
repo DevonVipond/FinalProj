@@ -17,7 +17,7 @@ function convertTo1DArray(nestedArr) {
 Database.prototype.exec = async (procedure_name, arguments) => {
     try {
 
-        console.log('Database -> calling ', procedure_name, ' ', arguments)
+        console.log('------------------------------\nCalling Stored Procedure: ', procedure_name, ' With Arguments: ', arguments)
 
         const query = new Promise((resolve, reject) => {
             db.query(procedure_name, arguments, function(e, result) {
@@ -34,7 +34,7 @@ Database.prototype.exec = async (procedure_name, arguments) => {
 
         const flattenedArray = convertTo1DArray(result)
 
-        console.log('Database -> exec -> ' + JSON.stringify(flattenedArray))
+        console.log('Result of Stored Procedure: ' + procedure_name + ' is: ' + JSON.stringify(flattenedArray) + '\n------------------------------')
 
         return {
             data: flattenedArray.filter( e => { return e.constructor.name == 'RowDataPacket' }),
@@ -42,7 +42,7 @@ Database.prototype.exec = async (procedure_name, arguments) => {
         }
     } catch(e) {
 
-        console.error("Database::exec -> Exception: " + e)
+        console.error("Stored Procedure: ", procedure_name, " Failed With Error: ", + e)
         throw e
 
     }

@@ -15,7 +15,7 @@ const calculateDistance = (user1Long, user1Lat, user2Lat, user2Long) => {
     return Math.sqrt(Math.pow(deltaLat, 2), Math.pow(deltaLong, 2)).toFixed(2)
 }
 
-const makeUserResponse = (usersDb, authUserLat, authUserLong) => {
+const makeUserResponse = async (usersDb, authUserLat, authUserLong) => {
     validateType(usersDb, TYPES.OBJECT)
     validateType(authUserLat, TYPES.STRING)
     validateType(authUserLong, TYPES.STRING)
@@ -55,14 +55,28 @@ const makeUserResponse = (usersDb, authUserLat, authUserLong) => {
     }).filter(u => { return u.username })
 
     let ret = {}
-    usersWithActivitiesAndRelativeDistance.forEach(user => {
+    for (let user of usersWithActivitiesAndRelativeDistance) {
         const { username } = user
         validateType(username, TYPES.STRING)
 
         ret[username] = user
-    })
+        try {
+            ret[username].averageReviewScore = await getAverageReviewScore(username)
+        } catch(e) { throw e }
+    }
 
     return Object.values(ret)
+}
+
+async function getAverageReviewScore(username) {
+    validateType(username, TYPES.STRING)
+    try {
+        const averageReviewScoreDb = await db.exec('call GET_RATING(?)', [ username ])
+        const reviewScore =  averageReviewScoreDb.data[0]['AVG(reviewScore)']
+        if (!reviewScore) return null
+
+        return reviewScore
+    } catch (e) { throw e }
 }
 
 const getHome = async (req, res) => {
@@ -86,13 +100,13 @@ const getHome = async (req, res) => {
         const userLocation = toDTO.location(locationDb.data)
 
         const friendsDb = await db.exec('call getFriends(?)', [username])
-        const friends = makeUserResponse(friendsDb.data, userLocation.latitude, userLocation.longitude)
+        const friends = await makeUserResponse(friendsDb.data, userLocation.latitude, userLocation.longitude)
 
         let matchesDb = await db.exec('call getMatches(?)', [username])
-        const matches = makeUserResponse(matchesDb.data, userLocation.latitude, userLocation.longitude)
+        const matches = await makeUserResponse(matchesDb.data, userLocation.latitude, userLocation.longitude)
 
         let incomingFriendRequestsDb = await db.exec('call incomingFriendRequests(?)', [username])
-        const incomingFriendRequests = makeUserResponse(incomingFriendRequestsDb.data, userLocation.latitude, userLocation.longitude)
+        const incomingFriendRequests = await makeUserResponse(incomingFriendRequestsDb.data, userLocation.latitude, userLocation.longitude)
 
         validateType(friends, TYPES.OBJECT)
         validateType(matches, TYPES.OBJECT)

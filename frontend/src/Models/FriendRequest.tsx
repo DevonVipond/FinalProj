@@ -10,8 +10,8 @@ export class FriendRequest extends User {
 
     private _id: string = ""
     private _message: string = ""
-    constructor({id, username, distance, activities, message}: UserProps & Props) {
-        super({username, distance, activities})
+    constructor({id, username, distance, activities, message, averageReviewScore}: UserProps & Props) {
+        super({username, distance, activities, averageReviewScore})
         this._id = id || ""
         this._message = message || ""
     }

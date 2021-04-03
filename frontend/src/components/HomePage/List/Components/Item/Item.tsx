@@ -70,13 +70,12 @@ export const FriendItem = ({ user, reloadBoard }: { user: Friend, reloadBoard: F
 
     reportFriend.bind(user)
 
-    const reviewFriend = (e: any, messageBoxId: string) => {
-        const htmlComponent: any = document.getElementById(messageBoxId)
-
-        if (htmlComponent)
-            ReviewFriend(user, htmlComponent.value)
+    const reviewFriend = (e: any, review: string) => {
+        if (review === '1' || review === '2' || review === '3' || review === '4' || review === '5' ) {
+            ReviewFriend(user, review)
                 .then((res: any) => { setShowReviewModal(false); reloadBoard();  })
                 .catch((err: any) => { logError(err); })
+        }
     }
 
     reviewFriend.bind(user)
@@ -89,6 +88,7 @@ export const FriendItem = ({ user, reloadBoard }: { user: Friend, reloadBoard: F
                 <div>
                     { user.activities().map( a => ( activityIcon(a.name(), a.skillLevel()) ) ) }
                 </div>
+                { user.averageReviewScore() && [ <div> Average Review Score { user.averageReviewScore() } </div> ] }
                 <div className="ui bottom attached button" onClick={() => setShowReviewModal(true)} id="addButton" >
                     <i className="add icon" ></i>
                     Review
@@ -127,6 +127,7 @@ export const MatchItem = ({ user , reloadBoard }: { user: Match, reloadBoard: Fu
             <a>
                 <p className='itemLabel' id='companyLabel'>{user.username()}</p>
                 <p className='itemLabel' id='positionLabel'>{user.distance()}</p>
+                { user.averageReviewScore() && [ <div> Average Review Score { user.averageReviewScore() } </div> ] }
                 <div>
                     { user.activities().map( a => ( activityIcon(a.name(), a.skillLevel()) ) ) }
                 </div>
@@ -207,18 +208,18 @@ export const FriendRequestItem = ({ user , reloadBoard }: { user: FriendRequest,
             .catch((err: any) => { logError(err) })
     }
 
-    console.log('grepme', JSON.stringify(user))
     return (
         <div className='itemContainer' >
             <a>
                 <p className='itemLabel' id='companyLabel'>{user.username()}</p>
                 <p className='itemLabel' id='positionLabel'>{user.distance()}</p>
-                <p className='itemLabel' id='positionLabel'>{user.message()}</p>
                 <div>
                     { user.activities() && user.activities().map( (a: Activity) => ( activityIcon(a.name(), a.skillLevel()) ) ) }
                 </div>
+                <div>Message: {user.message()}</div>
+                { user.averageReviewScore() && [ <div> Average Review Score: { user.averageReviewScore() } </div> ] }
                 <div className="ui bottom attached button" id="addButton" onClick={(e: any) => accept(e)} >
-                    <i className="minus icon"></i>
+                    <i className="plus icon"></i>
                     Accept
                 </div>
                 <div className="ui bottom attached button" id="addButton" onClick={(e: any) => reject(e)} >

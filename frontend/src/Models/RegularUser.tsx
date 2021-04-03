@@ -3,8 +3,8 @@ import {Activity} from "./Activity";
 import { AuthenticatedUser } from './Interfaces/AuthenticatedUser'
 
 export class RegularUser extends AuthenticatedUser {
-    constructor({username, distance, activities}: UserProps) {
-        super({username, distance, activities});
+    constructor({username, distance, activities, averageReviewScore}: UserProps) {
+        super({username, distance, activities, averageReviewScore});
     }
 
     public addActivity(activity: Activity): void {

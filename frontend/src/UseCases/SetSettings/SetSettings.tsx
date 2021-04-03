@@ -1,6 +1,5 @@
 import { api } from "../../Api/Api";
 import { Activity } from "../../Models/Activity";
-import { UserState } from "../../Models/UserState"
 
 
 export async function SetSettings(activities: Array<Activity>, distance: string | null = null): Promise<void> {

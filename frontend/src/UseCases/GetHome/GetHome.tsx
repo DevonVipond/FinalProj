@@ -52,13 +52,15 @@ export async function GetHome(): Promise<BoardT> {
             const username = f['username']
             const distance = f['distance']
             const averageReviewScore = f['averageReviewScore']
+            const phoneNumber = f['phoneNumber']
+
             const activities: Array<Activity> = f['activities'].map((activity: any) => {
 
                 return new Activity(activity)
 
             })
 
-            return new Friend({username, distance, activities, averageReviewScore})
+            return new Friend({username, distance, activities, averageReviewScore, phoneNumber})
 
         })
 

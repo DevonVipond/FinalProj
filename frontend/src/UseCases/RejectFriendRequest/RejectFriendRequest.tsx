@@ -1,6 +1,5 @@
 import { FriendRequest } from "../../Models/FriendRequest"
 import { api } from "../../Api/Api"
-import { UserState } from "../../Models/UserState"
 
 export async function RejectFriendRequest(request: FriendRequest): Promise<void> {
 
@@ -18,9 +17,6 @@ export async function RejectFriendRequest(request: FriendRequest): Promise<void>
 
         console.error('E: RejectFriendRequest ' + e.toString())
 
-        UserState.Instance()._incomingFriendRequests = UserState.Instance()._incomingFriendRequests.filter((a: any) => {return a.getId() !== request.getId()})
-        return;
-        
         throw e
 
     }

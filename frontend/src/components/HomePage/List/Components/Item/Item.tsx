@@ -89,6 +89,7 @@ export const FriendItem = ({ user, reloadBoard }: { user: Friend, reloadBoard: F
                     { user.activities().map( a => ( activityIcon(a.name(), a.skillLevel()) ) ) }
                 </div>
                 { user.averageReviewScore() && [ <div> Average Review Score { user.averageReviewScore() } </div> ] }
+                { user.phoneNumber() && [ <div> Phone Number { user.phoneNumber() } </div> ] }
                 <div className="ui bottom attached button" onClick={() => setShowReviewModal(true)} id="addButton" >
                     <i className="add icon" ></i>
                     Review

@@ -21,7 +21,7 @@ const registrationFields = [
     ['username', 'usernameForm'],
     ['password', 'passwordForm'],
     ['first name', 'firstNameForm'],
-    ['last name', 'firstNameForm'],
+    ['last name', 'lastNameForm'],
     ['phone number', 'phoneNumberForm'],
     ['age', 'ageForm'],
     ['about', 'aboutForm'],
